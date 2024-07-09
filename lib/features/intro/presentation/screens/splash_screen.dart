@@ -1,6 +1,6 @@
+import 'package:chortkeh/config/dimens/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'intro_screen.dart';
 
@@ -75,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen>
         alignment: Alignment.center,
         children: [
           AnimatedPositioned(
-            top: _scaleController.isCompleted ? 65.h : 55.h,
+            top: _scaleController.isCompleted ? 65.height(context) : 55.height(context),
             duration: const Duration(milliseconds: 500),
             child: Center(
               child: AnimatedOpacity(

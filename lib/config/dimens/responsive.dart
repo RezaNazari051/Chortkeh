@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
-
+ 
 class Responsive extends StatelessWidget {
   final Widget mobile;
   final Widget? tablet;
@@ -14,12 +13,12 @@ class Responsive extends StatelessWidget {
   });
 
   /// This isMobile, isTablet, isDesktop help us later
-  static bool isMobile() => Device.screenType==ScreenType.mobile;
+  static bool isMobile(BuildContext context) => MediaQuery.sizeOf(context).width<600;
 
-  static bool isTablet() =>Device.screenType==ScreenType.tablet;
+  static bool isTablet(BuildContext context) => MediaQuery.sizeOf(context).width>=600 &&  MediaQuery.sizeOf(context).width<1100;
       // ScreenUtil().scaleWidth < 1100 && ScreenUtil().screenWidth >= 600;
 
-  static bool isDesktop() => Device.screenType==ScreenType.desktop;
+  static bool isDesktop(BuildContext context) =>  MediaQuery.sizeOf(context).width>=1100;
 
   @override
   Widget build(BuildContext context) {

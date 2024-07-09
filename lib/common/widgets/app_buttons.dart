@@ -1,5 +1,5 @@
+import 'package:chortkeh/config/dimens/sizer.dart';
 import 'package:flutter/material.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
 class FillElevatedButton extends StatelessWidget {
   const FillElevatedButton(
@@ -21,7 +21,7 @@ class FillElevatedButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: theme.primaryColor,
-        fixedSize: Size(width ?? 88.w, height ?? 50),
+        fixedSize: Size(width ??80.width(), height ?? 50),
       ),
       onPressed: onPressed,
       child: Text(

@@ -3,6 +3,7 @@ import 'package:chortkeh/features/intro/presentation/screens/intro_screen.dart';
 import 'package:chortkeh/features/intro/presentation/screens/splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'common/screens/main_wrapper.dart';
 import 'features/auth/presentation/screens/otp_screen.dart';
 
 Map<String , WidgetBuilder>routeMethod(){
@@ -12,5 +13,6 @@ Map<String , WidgetBuilder>routeMethod(){
 
     LoginScreen.routeName:(context)=>const LoginScreen(),
     OtpScreen.routeName:(context)=>const OtpScreen(),
+    MainWrapper.routeName:(context)=>const MainWrapper(),
   };
 }
