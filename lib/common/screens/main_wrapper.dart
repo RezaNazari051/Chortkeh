@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../constants/constants.dart';
+import '../utils/constants.dart';
 
 class MainWrapper extends StatefulWidget {
   static const String routeName = '/';
@@ -55,80 +55,84 @@ class _MainWrapperState extends State<MainWrapper>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xfff7f9fd),
-      appBar: AppBar(
+    return SafeArea(
+    // bottom: false,
+      top: false,
+      child: Scaffold(
         backgroundColor: const Color(0xfff7f9fd),
-        leadingWidth: 32 + 20.w,
-        leading: Padding(
-          padding: EdgeInsetsDirectional.only(start: 20.w),
-          child: SvgPicture.asset(
-            'assets/icons/ic_chortkeh_small_logo.svg',
-          ),
-        ),
-        actions: [
-          Padding(
-            padding:   EdgeInsetsDirectional.only(end: 20.w),
+        appBar: AppBar(
+          backgroundColor: const Color(0xfff7f9fd),
+          leadingWidth: 32 + 20.w,
+          leading: Padding(
+            padding: EdgeInsetsDirectional.only(start: 20.w),
             child: SvgPicture.asset(
-              'assets/icons/ic_message_icon.svg',
+              'assets/icons/ic_chortkeh_small_logo.svg',
             ),
-          ), // SvgPicture.string('assets/icons/ic_message_icon.svg')
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        shape: const CircleBorder(),
-        child: const Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: Material(
-        color: Colors.white,
-        child: TabBar(
-            unselectedLabelColor: AppColor.grayColor,
-            onTap: (value) =>
-                context.read<BottomNavbarCubit>().changeNavbarIndex(value),
-            indicator: TopIndicator(),
-            indicatorSize: TabBarIndicatorSize.tab,
-            controller: _tabController,
-            tabs: [
-              Tab(
-                  icon: BottomNavbarWidget(
-                    icon: navbarItemsData['item0']!['icon']!,
-                    index: 0,
-                  ),
-                  text: navbarItemsData['item0']!['title']!),
-              Tab(
-                  icon: BottomNavbarWidget(
-                    icon: navbarItemsData['item1']!['icon']!,
-                    index: 1,
-                  ),
-                  text: navbarItemsData['item1']!['title']!),
-              const Visibility(
-                visible: false,
-                child: SizedBox(width: 15),
+          ),
+          actions: [
+            Padding(
+              padding:   EdgeInsetsDirectional.only(end: 20.w),
+              child: SvgPicture.asset(
+                'assets/icons/ic_message_icon.svg',
               ),
-              Tab(
-                  icon: BottomNavbarWidget(
-                    icon: navbarItemsData['item3']!['icon']!,
-                    index: 3,
-                  ),
-                  text: navbarItemsData['item3']!['title']!),
-              Tab(
-                  icon: BottomNavbarWidget(
-                    icon: navbarItemsData['item4']!['icon']!,
-                    index: 4,
-                  ),
-                  text: navbarItemsData['item4']!['title']!),
-            ]),
-      ),
-      body: TabBarView(controller: _tabController, children: [
-        HomeScreen(),
-        HomeScreen(),
-        HomeScreen(),
-        HomeScreen(),
-        HomeScreen(),
+            ), // SvgPicture.string('assets/icons/ic_message_icon.svg')
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: Material(
+          color: Colors.white,
+          child: TabBar(
+              unselectedLabelColor: AppColor.grayColor,
+              onTap: (value) =>
+                  context.read<BottomNavbarCubit>().changeNavbarIndex(value),
+              indicator: TopIndicator(),
+              indicatorSize: TabBarIndicatorSize.tab,
+              controller: _tabController,
+              tabs: [
+                Tab(
+                    icon: BottomNavbarWidget(
+                      icon: navbarItemsData['item0']!['icon']!,
+                      index: 0,
+                    ),
+                    text: navbarItemsData['item0']!['title']!),
+                Tab(
+                    icon: BottomNavbarWidget(
+                      icon: navbarItemsData['item1']!['icon']!,
+                      index: 1,
+                    ),
+                    text: navbarItemsData['item1']!['title']!),
+                const Visibility(
+                  visible: false,
+                  child: SizedBox(width: 15),
+                ),
+                Tab(
+                    icon: BottomNavbarWidget(
+                      icon: navbarItemsData['item3']!['icon']!,
+                      index: 3,
+                    ),
+                    text: navbarItemsData['item3']!['title']!),
+                Tab(
+                    icon: BottomNavbarWidget(
+                      icon: navbarItemsData['item4']!['icon']!,
+                      index: 4,
+                    ),
+                    text: navbarItemsData['item4']!['title']!),
+              ]),
+        ),
+        body: TabBarView(controller: _tabController, children: const[
+          HomeScreen(),
+          HomeScreen(),
+          HomeScreen(),
+          HomeScreen(),
+          HomeScreen(),
 
-      ]),
+        ]),
+      ),
     );
   }
 }

@@ -42,6 +42,10 @@ class AppTheme {
             ),
 
             //<------- body ------->
+            labelLarge:TextStyle(
+              fontFamily: 'IranYekan',
+              fontSize: 20,
+            ),
             bodyLarge: TextStyle(
               fontFamily: 'IranYekan',
               fontSize: 18,
@@ -54,6 +58,11 @@ class AppTheme {
               fontFamily: 'IranYekan',
               fontSize: 14,
             ),
+
+            //<------- body ------->
+
+
+
             labelMedium: TextStyle(fontFamily: 'IranYekanMedium', fontSize: 16),
             labelSmall: TextStyle(fontFamily: 'IranYekanMedium', fontSize: 14),
             displaySmall: TextStyle(fontFamily: 'IranYekan', fontSize: 12)),

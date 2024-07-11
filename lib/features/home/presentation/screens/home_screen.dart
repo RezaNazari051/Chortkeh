@@ -1,8 +1,10 @@
+
 import 'package:chortkeh/config/theme/app_color.dart';
-import 'package:chortkeh/features/home/presentation/widgets/semicircular_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+
+import '../widgets/balance_indicator_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -22,8 +24,10 @@ class HomeScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('حساب‌کتاب مهرماه',
-                      style: Theme.of(context).textTheme.titleMedium),
+                  const Text(
+                    'حساب‌کتاب مهرماه',
+                    style: TextStyle(fontFamily: 'IranYekanBold'),
+                  ),
                   OutlinedButton(
                     onPressed: () {},
                     child: Row(
@@ -49,26 +53,13 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
+           const SliverGap(20),
            SliverToBoxAdapter(
-            child: Center(
-              child: SemicircularIndicator(
-                radius: 150,
-                color: Colors.green,
-                backgroundColor: Colors.grey.shade300,
-                strokeWidth: 40,
-                bottomPadding: 0, received: 10000000 ,paid:5000000 ,
-                // child: Text(
-                //   '75%',
-                //   style: TextStyle(
-                //       fontSize: 32,
-                //       fontWeight: FontWeight.w600,
-                //       color: Colors.orange),
-                // ),
-              ),
-            ),
+            child: BalanceWidget(deposit: 10000000, withdrawal: 1000000,size: Size(285.w, 150),),
           )
         ],
       ),
     );
   }
 }
+
