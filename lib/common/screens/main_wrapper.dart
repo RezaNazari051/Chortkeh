@@ -1,8 +1,12 @@
 import 'dart:ui';
 import 'package:chortkeh/common/bloc/bottom_navbar_cubit/bottom_navbar_cubit.dart';
+import 'package:chortkeh/config/dimens/responsive.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:chortkeh/features/home/presentation/screens/home_screen.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -46,93 +50,141 @@ class _MainWrapperState extends State<MainWrapper>
       'icon': '$iconUrl/ic_navbar_profile',
     },
   };
+  int _previousIndex = 0;
 
   @override
   void initState() {
-    _tabController = TabController(length: 5, vsync: this);
     super.initState();
+    _tabController = TabController(length: 5, vsync: this);
+    _tabController.addListener(
+      () {
+        if (_tabController.indexIsChanging) {
+          if (_tabController.index == 2) {
+            _tabController.index = _previousIndex;
+          } else {
+            _previousIndex = _tabController.index;
+          }
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isTablet = Responsive.isTablet();
     return SafeArea(
-    // bottom: false,
+      // bottom: false,
       top: false,
-      child: Scaffold(
-        backgroundColor: const Color(0xfff7f9fd),
-        appBar: AppBar(
+      child: LayoutBuilder(builder: (context, constraints) {
+        return Scaffold(
           backgroundColor: const Color(0xfff7f9fd),
-          leadingWidth: 32 + 20.w,
-          leading: Padding(
-            padding: EdgeInsetsDirectional.only(start: 20.w),
-            child: SvgPicture.asset(
-              'assets/icons/ic_chortkeh_small_logo.svg',
+          appBar: AppBar(
+            backgroundColor: const Color(0xfff7f9fd),
+            leadingWidth: 32 + constraints.maxWidth * 0.05,
+            leading: Padding(
+              padding: EdgeInsetsDirectional.only(
+                  start: constraints.maxWidth * 0.05),
+              child: SvgPicture.asset(
+                'assets/icons/ic_chortkeh_small_logo.svg',
+              ),
+            ),
+            actions: [
+              Padding(
+                padding: EdgeInsetsDirectional.only(
+                    end: constraints.maxWidth * 0.05),
+                child: SvgPicture.asset(
+                  width: 32,
+                  'assets/icons/ic_message_icon.svg',
+                ),
+              ), // SvgPicture.string('assets/icons/ic_message_icon.svg')
+            ],
+          ),
+          floatingActionButton: SizedBox(
+            width:Responsive.isTablet()? constraints.maxWidth*0.1:constraints.maxWidth*0.13,
+            child: FittedBox(
+              child: FloatingActionButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          '${20.w.toString()}\n ${constraints.maxWidth * 0.13}'),
+                    ),
+                  );
+                },
+                shape: const CircleBorder(),
+                child: const Icon(Icons.add),
+              ),
             ),
           ),
-          actions: [
-            Padding(
-              padding:   EdgeInsetsDirectional.only(end: 20.w),
-              child: SvgPicture.asset(
-                'assets/icons/ic_message_icon.svg',
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: Material(
+            color: Colors.white,
+            child: SizedBox(
+              child: TabBar(
+                // splashFactory: NoSplash.splashFactory,
+                unselectedLabelColor: AppColor.grayColor,
+                onTap: (value) {
+                  ///for change nav bar item color
+                  context.read<BottomNavbarCubit>().changeNavbarIndex(value);
+                },
+                indicator: TopIndicator(),
+                indicatorSize: TabBarIndicatorSize.tab,
+                controller: _tabController,
+                labelStyle: Theme.of(context).textTheme.displaySmall,
+                labelColor: AppColor.primaryColor,
+                tabs: [
+                  Tab(
+                      height: isTablet ? 120 : null,
+                      icon: BottomNavbarWidget(
+                        icon: navbarItemsData['item0']!['icon']!,
+                        index: 0,
+                      ),
+                      text: navbarItemsData['item0']!['title']!),
+                  Tab(
+                      height: isTablet ? 120 : null,
+                      icon: BottomNavbarWidget(
+                        icon: navbarItemsData['item1']!['icon']!,
+                        index: 1,
+                      ),
+                      text: navbarItemsData['item1']!['title']!),
+                  const SizedBox.shrink(),
+                  Tab(
+                      height: isTablet ? 120 : null,
+                      icon: BottomNavbarWidget(
+                        icon: navbarItemsData['item3']!['icon']!,
+                        index: 3,
+                      ),
+                      text: navbarItemsData['item3']!['title']!),
+                  Tab(
+                      height: isTablet ? 120 : null,
+                      icon: BottomNavbarWidget(
+                        icon: navbarItemsData['item4']!['icon']!,
+                        index: 4,
+                      ),
+                      text: navbarItemsData['item4']!['title']!),
+                ],
               ),
-            ), // SvgPicture.string('assets/icons/ic_message_icon.svg')
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: Material(
-          color: Colors.white,
-          child: TabBar(
-              unselectedLabelColor: AppColor.grayColor,
-              onTap: (value) =>
-                  context.read<BottomNavbarCubit>().changeNavbarIndex(value),
-              indicator: TopIndicator(),
-              indicatorSize: TabBarIndicatorSize.tab,
+            ),
+          ),
+          body: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
               controller: _tabController,
-              tabs: [
-                Tab(
-                    icon: BottomNavbarWidget(
-                      icon: navbarItemsData['item0']!['icon']!,
-                      index: 0,
-                    ),
-                    text: navbarItemsData['item0']!['title']!),
-                Tab(
-                    icon: BottomNavbarWidget(
-                      icon: navbarItemsData['item1']!['icon']!,
-                      index: 1,
-                    ),
-                    text: navbarItemsData['item1']!['title']!),
-                const Visibility(
-                  visible: false,
-                  child: SizedBox(width: 15),
-                ),
-                Tab(
-                    icon: BottomNavbarWidget(
-                      icon: navbarItemsData['item3']!['icon']!,
-                      index: 3,
-                    ),
-                    text: navbarItemsData['item3']!['title']!),
-                Tab(
-                    icon: BottomNavbarWidget(
-                      icon: navbarItemsData['item4']!['icon']!,
-                      index: 4,
-                    ),
-                    text: navbarItemsData['item4']!['title']!),
+              children: const [
+                HomeScreen(),
+                HomeScreen(),
+                SizedBox.shrink(),
+                HomeScreen(),
+                HomeScreen(),
               ]),
-        ),
-        body: TabBarView(controller: _tabController, children: const[
-          HomeScreen(),
-          HomeScreen(),
-          HomeScreen(),
-          HomeScreen(),
-          HomeScreen(),
-
-        ]),
-      ),
+        );
+      }),
     );
   }
 }
@@ -152,6 +204,8 @@ class BottomNavbarWidget extends StatelessWidget {
     return BlocBuilder<BottomNavbarCubit, int>(
       builder: (context, state) {
         return SvgPicture.asset(
+            width: Responsive.isTablet() ? 34 : 24,
+            fit: BoxFit.cover,
             state == index ? '${icon}_fill.svg' : '$icon.svg');
       },
     );
@@ -176,4 +230,3 @@ class _TopIndicatorBox extends BoxPainter {
     canvas.drawLine(offset, Offset(cfg.size!.width + offset.dx, 0), _paint);
   }
 }
-

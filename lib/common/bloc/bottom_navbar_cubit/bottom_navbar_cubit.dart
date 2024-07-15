@@ -6,7 +6,9 @@ class BottomNavbarCubit extends Cubit<int> {
   int index=0;
 
   void changeNavbarIndex(int newIndex){
-    emit(index=newIndex);
+    if(newIndex!=2) {
+      emit(index=newIndex);
+    }
 
   }
 }

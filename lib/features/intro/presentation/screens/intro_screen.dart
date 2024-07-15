@@ -129,6 +129,7 @@ class _IntroScreenState extends State<IntroScreen>
           ),
           const Spacer(),
           FillElevatedButton(
+
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(
                     context, LoginScreen.routeName, (route) => false);

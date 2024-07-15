@@ -1,8 +1,10 @@
+import 'package:chortkeh/config/dimens/responsive.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
   static ThemeData lightTheme() {
+    final bool isMobile=Responsive.isMobile();
     return ThemeData(
         scaffoldBackgroundColor: Colors.white,
         colorScheme: const ColorScheme(
@@ -15,7 +17,7 @@ class AppTheme {
             onError: Colors.white,
             surface: Colors.white,
             onSurface: Colors.black),
-        textTheme: const TextTheme(
+        textTheme:  TextTheme(
             headlineLarge: TextStyle(
               fontFamily: 'IranYekanBold',
               fontSize: 32,
@@ -26,7 +28,7 @@ class AppTheme {
             ),
             headlineSmall: TextStyle(
               fontFamily: 'IranYekanBold',
-              fontSize: 20,
+              fontSize: Responsive.isMobile()?20:30,
             ),
             titleLarge: TextStyle(
               fontFamily: 'IranYekanBold',
@@ -36,9 +38,9 @@ class AppTheme {
               fontFamily: 'IranYekanBold',
               fontSize: 16,
             ),
-            titleSmall: TextStyle(
+            titleSmall:  TextStyle(
               fontFamily: 'IranYekanBold',
-              fontSize: 14,
+              fontSize: isMobile?14:25,
             ),
 
             //<------- body ------->
@@ -50,11 +52,11 @@ class AppTheme {
               fontFamily: 'IranYekan',
               fontSize: 18,
             ),
-            bodyMedium: TextStyle(
+            bodyMedium:  TextStyle(
               fontFamily: 'IranYekan',
-              fontSize: 16,
+              fontSize: Responsive.isMobile()?16:26,
             ),
-            bodySmall: TextStyle(
+            bodySmall: const TextStyle(
               fontFamily: 'IranYekan',
               fontSize: 14,
             ),
@@ -63,9 +65,9 @@ class AppTheme {
 
 
 
-            labelMedium: TextStyle(fontFamily: 'IranYekanMedium', fontSize: 16),
-            labelSmall: TextStyle(fontFamily: 'IranYekanMedium', fontSize: 14),
-            displaySmall: TextStyle(fontFamily: 'IranYekan', fontSize: 12)),
+            labelMedium: TextStyle(fontFamily: 'IranYekanMedium', fontSize: Responsive.isMobile()?16:26,),
+            labelSmall: const TextStyle(fontFamily: 'IranYekanMedium', fontSize: 14),
+            displaySmall: TextStyle(fontFamily: 'IranYekan', fontSize:Responsive.isMobile()? 12:25)),
 
         ///? Outline button
         outlinedButtonTheme: OutlinedButtonThemeData(
