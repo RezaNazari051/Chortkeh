@@ -95,6 +95,7 @@ class _BalanceWidgetState extends State<BalanceWidget>
       return Container(
         // padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 20.h),
         decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: AppColor.cardBorderGrayColor)),
         child: Padding(

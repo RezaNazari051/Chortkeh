@@ -57,7 +57,7 @@ class _MainWrapperState extends State<MainWrapper>
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
     _tabController.addListener(
-      () {
+          () {
         if (_tabController.indexIsChanging) {
           if (_tabController.index == 2) {
             _tabController.index = _previousIndex;
@@ -77,6 +77,14 @@ class _MainWrapperState extends State<MainWrapper>
 
   @override
   Widget build(BuildContext context) {
+    // final data=<ChartData>[
+    // ChartData('A', 25),
+    // ChartData('B', 59),
+    // ChartData('C', 43),
+    // ChartData('D', 16),
+    // ChartData('E', 15),
+    // ];
+
     final bool isTablet = Responsive.isTablet();
     return SafeArea(
       // bottom: false,
@@ -106,14 +114,17 @@ class _MainWrapperState extends State<MainWrapper>
             ],
           ),
           floatingActionButton: SizedBox(
-            width:Responsive.isTablet()? constraints.maxWidth*0.1:constraints.maxWidth*0.13,
+            width: Responsive.isTablet()
+                ? constraints.maxWidth * 0.1
+                : constraints.maxWidth * 0.13,
             child: FittedBox(
               child: FloatingActionButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                          '${20.w.toString()}\n ${constraints.maxWidth * 0.13}'),
+                          '${20.w.toString()}\n ${constraints.maxWidth *
+                              0.13}'),
                     ),
                   );
                 },
@@ -123,7 +134,7 @@ class _MainWrapperState extends State<MainWrapper>
             ),
           ),
           floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+          FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: Material(
             color: Colors.white,
             child: SizedBox(
@@ -137,7 +148,10 @@ class _MainWrapperState extends State<MainWrapper>
                 indicator: TopIndicator(),
                 indicatorSize: TabBarIndicatorSize.tab,
                 controller: _tabController,
-                labelStyle: Theme.of(context).textTheme.displaySmall,
+                labelStyle: Theme
+                    .of(context)
+                    .textTheme
+                    .displaySmall,
                 labelColor: AppColor.primaryColor,
                 tabs: [
                   Tab(
@@ -176,7 +190,7 @@ class _MainWrapperState extends State<MainWrapper>
           body: TabBarView(
               physics: const NeverScrollableScrollPhysics(),
               controller: _tabController,
-              children: const [
+              children:const [
                 HomeScreen(),
                 HomeScreen(),
                 SizedBox.shrink(),
@@ -230,3 +244,4 @@ class _TopIndicatorBox extends BoxPainter {
     canvas.drawLine(offset, Offset(cfg.size!.width + offset.dx, 0), _paint);
   }
 }
+

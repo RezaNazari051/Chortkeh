@@ -1,6 +1,7 @@
 import 'package:chortkeh/common/bloc/bottom_navbar_cubit/bottom_navbar_cubit.dart';
 import 'package:chortkeh/config/dimens/responsive.dart';
 import 'package:chortkeh/config/theme/app_theme.dart';
+import 'package:chortkeh/features/home/presentation/bloc/touch_chart_section_callback/chart_section_cubit.dart';
 import 'package:chortkeh/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -14,9 +15,8 @@ void main() {
   runApp(MultiBlocProvider(
     providers: [
       //! Cubits
-      BlocProvider(
-        create: (context) => BottomNavbarCubit(),
-      )
+      BlocProvider(create: (context) => BottomNavbarCubit()),
+      BlocProvider(create: (context) => ChartSectionCubit()),
     ],
     child: const MyApp(),
   ));

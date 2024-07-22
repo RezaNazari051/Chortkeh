@@ -28,7 +28,7 @@ class AppTheme {
             ),
             headlineSmall: TextStyle(
               fontFamily: 'IranYekanBold',
-              fontSize: Responsive.isMobile()?20:30,
+              fontSize: Responsive.isMobile()?20:26,
             ),
             titleLarge: TextStyle(
               fontFamily: 'IranYekanBold',
@@ -40,11 +40,11 @@ class AppTheme {
             ),
             titleSmall:  TextStyle(
               fontFamily: 'IranYekanBold',
-              fontSize: isMobile?14:25,
+              fontSize: isMobile?14:20,
             ),
 
             //<------- body ------->
-            labelLarge:TextStyle(
+            labelLarge:const TextStyle(
               fontFamily: 'IranYekan',
               fontSize: 20,
             ),
@@ -54,20 +54,20 @@ class AppTheme {
             ),
             bodyMedium:  TextStyle(
               fontFamily: 'IranYekan',
-              fontSize: Responsive.isMobile()?16:26,
+              fontSize: Responsive.isMobile()?16:22,
             ),
-            bodySmall: const TextStyle(
+            bodySmall:  TextStyle(
               fontFamily: 'IranYekan',
-              fontSize: 14,
+              fontSize:isMobile ?14:20,
             ),
 
             //<------- body ------->
 
 
 
-            labelMedium: TextStyle(fontFamily: 'IranYekanMedium', fontSize: Responsive.isMobile()?16:26,),
+            labelMedium: TextStyle(fontFamily: 'IranYekanMedium', fontSize: Responsive.isMobile()?16:22,),
             labelSmall: const TextStyle(fontFamily: 'IranYekanMedium', fontSize: 14),
-            displaySmall: TextStyle(fontFamily: 'IranYekan', fontSize:Responsive.isMobile()? 12:25)),
+            displaySmall: TextStyle(fontFamily: 'IranYekan', fontSize:Responsive.isMobile()? 12:18)),
 
         ///? Outline button
         outlinedButtonTheme: OutlinedButtonThemeData(

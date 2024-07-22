@@ -43,6 +43,10 @@ dependencies:
   animate_do: ^3.3.4
   equatable: ^2.0.5
   intl: ^0.19.0
+  fl_chart: ^0.68.0
+  syncfusion_flutter_charts: ^26.1.42
+  shamsi_date: ^1.0.2
+#  easy_pie_chart: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +77,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/icons/
+    - assets/icons/category_icons/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
