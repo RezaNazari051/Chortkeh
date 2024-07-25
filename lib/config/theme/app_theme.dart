@@ -18,11 +18,11 @@ class AppTheme {
             surface: Colors.white,
             onSurface: Colors.black),
         textTheme:  TextTheme(
-            headlineLarge: TextStyle(
+            headlineLarge: const TextStyle(
               fontFamily: 'IranYekanBold',
               fontSize: 32,
             ),
-            headlineMedium: TextStyle(
+            headlineMedium: const TextStyle(
               fontFamily: 'IranYekanBold',
               fontSize: 24,
             ),
@@ -30,11 +30,11 @@ class AppTheme {
               fontFamily: 'IranYekanBold',
               fontSize: Responsive.isMobile()?20:26,
             ),
-            titleLarge: TextStyle(
+            titleLarge: const TextStyle(
               fontFamily: 'IranYekanBold',
               fontSize: 18,
             ),
-            titleMedium: TextStyle(
+            titleMedium: const TextStyle(
               fontFamily: 'IranYekanBold',
               fontSize: 16,
             ),
@@ -48,7 +48,7 @@ class AppTheme {
               fontFamily: 'IranYekan',
               fontSize: 20,
             ),
-            bodyLarge: TextStyle(
+            bodyLarge: const TextStyle(
               fontFamily: 'IranYekan',
               fontSize: 18,
             ),
@@ -66,7 +66,7 @@ class AppTheme {
 
 
             labelMedium: TextStyle(fontFamily: 'IranYekanMedium', fontSize: Responsive.isMobile()?16:22,),
-            labelSmall: const TextStyle(fontFamily: 'IranYekanMedium', fontSize: 14),
+            labelSmall:  TextStyle(fontFamily: 'IranYekanMedium', fontSize: Responsive.isMobile()? 14:20),
             displaySmall: TextStyle(fontFamily: 'IranYekan', fontSize:Responsive.isMobile()? 12:18)),
 
         ///? Outline button

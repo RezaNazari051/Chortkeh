@@ -1,7 +1,6 @@
 import 'package:chortkeh/common/screens/main_wrapper.dart';
 import 'package:chortkeh/common/utils/constants.dart';
 import 'package:chortkeh/common/widgets/app_buttons.dart';
-import 'package:chortkeh/config/dimens/sizer.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

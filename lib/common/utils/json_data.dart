@@ -24,7 +24,7 @@ const Map<String, Map<String, String>> homeFeaturesCardItem = {
 
 final adsad = {
   'item0': {
-    'color': Color(0xffFCF8D2),
+    'color': const Color(0xffFCF8D2),
     'category': 'ماشین',
     'date': Jalali.fromDateTime(DateTime.now()),
   }

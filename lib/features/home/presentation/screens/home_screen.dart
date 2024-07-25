@@ -1,6 +1,4 @@
 import 'package:chortkeh/common/utils/constants.dart';
-import 'package:chortkeh/common/utils/extensions.dart';
-import 'package:chortkeh/config/dimens/responsive.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:chortkeh/features/home/presentation/widgets/recent_activities_chart_widget.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import '../../../../common/utils/json_data.dart';
-import '../../../../common/widgets/app_buttons.dart';
-import '../../../../common/widgets/dialogs/delete_transaction_dialog.dart';
 import '../widgets/balance_indicator_widget.dart';
 import '../widgets/features_cards_list.dart';
+import '../widgets/tranaction_detail_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -81,7 +78,7 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       Text(
                         'حساب‌کتاب مهرماه',
-                        style: Theme.of(context).textTheme.labelMedium,
+                        style: textTheme.labelMedium,
                       ),
                       OutlinedButton(
                         onPressed: () {},
@@ -89,9 +86,7 @@ class HomeScreen extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text('همه حساب‌ها',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium!
+                                style: textTheme.labelMedium!
                                     .apply(color: AppColor.primaryColor)),
                             const Gap(8),
                             Transform.rotate(
@@ -125,7 +120,7 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     Text('فعالیت‌های اخیر مهرماه',
-                        style: Theme.of(context).textTheme.labelMedium),
+                        style: textTheme.labelMedium),
                     const Spacer(),
                     InkWell(
                         onTap: () {},
@@ -153,71 +148,18 @@ class HomeScreen extends StatelessWidget {
 
               const SliverGap(100),
               SliverList.builder(
-                  itemCount: recentActivities.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        showTransactionDetailBottomSheet(
-                            context, recentActivities, index);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        decoration: BoxDecoration(
-                            border:
-                                Border.all(color: AppColor.cardBorderGrayColor),
-                            borderRadius: BorderRadius.circular(8)),
-                        margin: const EdgeInsets.only(bottom: 10),
-                        height: Responsive.isTablet() ? 85 : 65,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: recentActivities[index].color,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Center(
-                                child: SvgPicture.asset(
-                                    recentActivities[index].icon),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(recentActivities[index].category),
-                                  Text(convertDateToJalali(
-                                      recentActivities[index].date)),
-                                ],
-                              ),
-                            ),
-                            const Spacer(),
-                            Text.rich(
-                              TextSpan(
-                                style: Theme.of(context).textTheme.bodySmall,
-                                text: recentActivities[index]
-                                    .price
-                                    .toStringAsFixed(0)
-                                    .toCurrencyFormat(),
-                                children: [
-                                  TextSpan(
-                                    text: ' تومان',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displaySmall!
-                                        .apply(color: AppColor.grayColor),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  })
+                itemCount: recentActivities.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      showTransactionDetailBottomSheet(
+                          context, recentActivities, index);
+                    },
+                    child: TransactionDetailWidget(
+                        recentActivities: recentActivities, index: index),
+                  );
+                },
+              )
             ],
           ),
         );
@@ -227,110 +169,12 @@ class HomeScreen extends StatelessWidget {
 
   Future<dynamic> showTransactionDetailBottomSheet(BuildContext context,
       List<RecentActivities> recentActivities, int index) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
     return showModalBottomSheet(
       context: context,
       builder: (context) {
         final recentActivity = recentActivities[index];
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(width: double.infinity),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                width: 60,
-                height: 5,
-                decoration: BoxDecoration(
-                    color: AppColor.cardBorderGrayColor,
-                    borderRadius: BorderRadius.circular(28)),
-              ),
-              const Gap(20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Spacer(),
-                  Text('جزئیات تراکنش', style: textTheme.labelSmall),
-                  Expanded(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SvgPicture.asset('$iconUrl/ic_edit.svg'),
-                      const Gap(20),
-                      IconButton(
-                        onPressed: () {
-                          showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (context) {
-                                return const DeleteTransactionDialog();
-                              });
-                        },
-                        icon: SvgPicture.asset('$iconUrl/ic_trash.svg'),
-                      ),
-                    ],
-                  ))
-                ],
-              ),
-              const Gap(16),
-              TranactionDetailBottomSheetRowData(
-                  title: 'دسته‌بندی پرداخت', detail: recentActivity.category),
-              TranactionDetailBottomSheetRowData(
-                  title: 'مبلغ پرداخت',
-                  detail:
-                      '${recentActivity.price.toStringAsFixed(0).toCurrencyFormat()} تومان'),
-              TranactionDetailBottomSheetRowData(
-                  title: 'برداشت از', detail: recentActivity.bankCard),
-              TranactionDetailBottomSheetRowData(
-                title: 'تاریخ و ساعت',
-                detail: convertDateToJalali(recentActivity.date),
-                marginBottom: 16,
-              ),
-              FillElevatedButton(
-                  backgroundColor: const Color(0xffEBEFFB),
-                  textStyle:
-                      textTheme.labelSmall!.apply(color: AppColor.primaryColor),
-                  onPressed: () {},
-                  title: 'بازگشت'),
-              const Gap(16)
-            ],
-          ),
-        );
+        return TranactionDetailBottomSheet(recentActivity: recentActivity);
       },
-    );
-  }
-}
-
-
-class TranactionDetailBottomSheetRowData extends StatelessWidget {
-  const TranactionDetailBottomSheetRowData({
-    super.key,
-    required this.title,
-    required this.detail,
-    this.marginBottom = 12,
-  });
-  final String title;
-  final String detail;
-  final double marginBottom;
-
-  @override
-  Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: EdgeInsets.only(bottom: marginBottom),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title, style: textTheme.bodyMedium),
-          Text(
-            detail,
-            style: textTheme.bodyMedium!.apply(
-              color: AppColor.grayColor,
-            ),
-          )
-        ],
-      ),
     );
   }
 }

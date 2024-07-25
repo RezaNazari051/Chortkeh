@@ -9,7 +9,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'common/screens/main_wrapper.dart';
-import 'features/intro/presentation/screens/splash_screen.dart';
 
 void main() {
   runApp(MultiBlocProvider(
@@ -62,6 +61,6 @@ class MyApp extends StatelessWidget {
           );
         },
       );
-    });
+    },);
   }
 }
