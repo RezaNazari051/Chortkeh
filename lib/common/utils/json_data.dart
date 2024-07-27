@@ -48,3 +48,18 @@ class RecentActivities {
       required this.price,
       required this.value});
 }
+
+class Target {
+  final int id;
+  final String name;
+  final double amount;
+  final double progress;
+  final String image;
+
+  Target(
+      {required this.id,
+      required this.name,
+      required this.amount,
+      required this.progress,
+      required this.image});
+}

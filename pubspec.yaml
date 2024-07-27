@@ -78,6 +78,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/icons/category_icons/
+    - assets/icons/target_category_icons/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -3,13 +3,16 @@ import 'package:gap/gap.dart';
 
 class PTextFormField extends StatelessWidget {
   const PTextFormField(
-      {super.key, required this.title, required this.hintText, required this.controller, required this.keyboardType, this.maxLength,});
+      {super.key, required this.title, required this.hintText, required this.controller,  this.keyboardType=TextInputType.name, 
+      this.textAlign=TextAlign.start,
+      
+      this.maxLength,});
 
 
   final String title;
   final String hintText;
   final TextEditingController controller;
-
+  final TextAlign textAlign;
   final TextInputType keyboardType;
 
   final int? maxLength;
@@ -30,11 +33,11 @@ class PTextFormField extends StatelessWidget {
           child: TextFormField(
             style: Theme.of(context).textTheme.bodySmall,
             maxLength:maxLength,
-            textAlign: TextAlign.end,
+            textAlign: textAlign,
             controller: controller,
             keyboardType: keyboardType,
             decoration: InputDecoration(
-                hintText: hintText,
+                hintText: hintText, 
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16)
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:chortkeh/features/auth/presentation/screens/login_screen.dart';
 import 'package:chortkeh/features/intro/presentation/screens/intro_screen.dart';
 import 'package:chortkeh/features/intro/presentation/screens/splash_screen.dart';
+import 'package:chortkeh/features/peleh_peleh/presentation/screens/new_peleh_screen.dart';
 import 'package:chortkeh/features/peleh_peleh/presentation/screens/peleh_screen.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -16,5 +17,6 @@ Map<String , WidgetBuilder>routeMethod(){
     OtpScreen.routeName:(context)=>const OtpScreen(),
     MainWrapper.routeName:(context)=>const MainWrapper(),
     PelehScreen.routeName:(context)=>const PelehScreen(),
+    NewPelehScreen.routeName:(context)=>const NewPelehScreen(),
   };
 }
