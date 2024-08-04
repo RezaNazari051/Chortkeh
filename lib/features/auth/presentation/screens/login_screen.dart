@@ -1,5 +1,3 @@
-import 'package:chortkeh/common/widgets/app_buttons.dart';
-import 'package:chortkeh/common/widgets/app_text_form_field.dart';
 import 'package:chortkeh/config/dimens/sizer.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:chortkeh/features/auth/presentation/screens/otp_screen.dart';
@@ -8,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
+
+import '../../../../core/widgets/app_buttons.dart';
+import '../../../../core/widgets/app_text_form_field.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = 'LoginScreen';

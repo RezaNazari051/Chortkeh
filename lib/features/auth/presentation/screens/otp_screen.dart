@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:chortkeh/common/widgets/app_buttons.dart';
 import 'package:chortkeh/config/dimens/sizer.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:pinput/pinput.dart';
 
-import '../../../../common/screens/main_wrapper.dart';
+import '../../../../core/screens/main_wrapper.dart';
+import '../../../../core/widgets/app_buttons.dart';
+
 
 class OtpScreen extends StatefulWidget {
   static const String routeName = 'OtpScreen';

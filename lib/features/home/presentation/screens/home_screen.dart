@@ -1,17 +1,41 @@
-import 'package:chortkeh/common/utils/constants.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
+import 'package:chortkeh/core/utils/extensions.dart';
+import 'package:chortkeh/features/home/presentation/bloc/manage_cards_bloc/card_cubit.dart';
 import 'package:chortkeh/features/home/presentation/widgets/recent_activities_chart_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:shamsi_date/shamsi_date.dart';
-import '../../../../common/utils/json_data.dart';
+import '../../../../core/utils/constants.dart';
+import '../../../../core/utils/json_data.dart';
+import '../../data/model/card_model.dart';
 import '../widgets/balance_indicator_widget.dart';
 import '../widgets/features_cards_list.dart';
 import '../widgets/tranaction_detail_widget.dart';
+import 'add_card_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Future<List<CardModel>>? cardList;
+
+  @override
+  void initState() {
+    // final CardHelper dbHelper=locator<CardHelper>();
+    // final dbHelper = locator<CardsDataHelper>();
+    // cardList = dbHelper.getCards();
+
+ 
+    // _cardsFuture=dbHelper.getCards();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +86,12 @@ class HomeScreen extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
+        // final CardHelper cardHelper = locator<CardHelper>();
         return Padding(
           padding:
               EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.05),
           child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
             slivers: [
               SliverPadding(
                 padding: const EdgeInsets.only(
@@ -81,7 +107,20 @@ class HomeScreen extends StatelessWidget {
                         style: textTheme.labelMedium,
                       ),
                       OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          // Navigator.pushNamed(context, AddCardScreen.routeName);
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+        context.read<CardCubit>().loadCards();
+
+                              return CardListModal(
+                                cards: cardList,
+                              );
+                              // return ManageChannelsBottomSheet(cardHelper: cardHelper, textTheme: textTheme);
+                            },
+                          );
+                        },
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -146,18 +185,12 @@ class HomeScreen extends StatelessWidget {
 
               RecentActivitiesChartWidget(constraints: constraints),
 
-              const SliverGap(100),
+              const SliverGap(12),
               SliverList.builder(
                 itemCount: recentActivities.length,
                 itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      showTransactionDetailBottomSheet(
-                          context, recentActivities, index);
-                    },
-                    child: TransactionDetailWidget(
-                        recentActivities: recentActivities, index: index),
-                  );
+                  return TransactionDetailWidget(
+                      recentActivities: recentActivities, index: index);
                 },
               )
             ],
@@ -166,15 +199,58 @@ class HomeScreen extends StatelessWidget {
       },
     );
   }
+}
 
-  Future<dynamic> showTransactionDetailBottomSheet(BuildContext context,
-      List<RecentActivities> recentActivities, int index) {
-    return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        final recentActivity = recentActivities[index];
-        return TranactionDetailBottomSheet(recentActivity: recentActivity);
-      },
+class ManageChannelsBottomSheet extends StatelessWidget {
+  const ManageChannelsBottomSheet({
+    super.key,
+    // required this.cardHelper,
+    required this.textTheme,
+  });
+
+  // final CardHelper cardHelper;
+  final TextTheme textTheme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          width: 60,
+          height: 5,
+          decoration: BoxDecoration(
+              color: AppColor.cardBorderGrayColor,
+              borderRadius: BorderRadius.circular(28)),
+        ),
+        const Gap(52),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            InkWell(
+              onTap: () async {},
+              child: Text(
+                'کانال‌های ورودی',
+                style: textTheme.titleSmall,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+        const Gap(8),
+        InkWell(
+          onTap: () {},
+          child: Row(
+            children: [
+              SvgPicture.asset('$iconUrl/ic_add_square.svg'),
+              const Gap(5),
+              Text('اضافه کردن کانال جدید', style: textTheme.labelSmall)
+            ],
+          ),
+        ),
+        const Gap(16),
+      ],
     );
   }
 }
@@ -185,4 +261,105 @@ String convertDateToJalali(DateTime dateTime) {
   final date = jalali.formatter;
 
   return '${date.wN}، ${date.d}${date.mN}، ${date.y}، ${jalali.hour}:${jalali.minute}';
+}
+
+class CardListModal extends StatelessWidget {
+  final Future<List<CardModel>>? cards;
+  const CardListModal({
+    super.key,
+    required this.cards,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+     expand: false,
+                builder: (context, scrollController) {
+        return BlocBuilder<CardCubit, CardState>(
+          builder: (context, state) {
+            if (state is GetCardsLoading) {
+              return const Center(
+                child: CupertinoActivityIndicator(),
+              );
+            } else if (state is GetCardsCompleted) {
+              final cards = state.cards;
+             return Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16.0),
+                        topRight: Radius.circular(16.0),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Text(
+                            'کانال‌های ورودی',
+                            style: TextStyle(
+                                fontSize: 18.0, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            controller: scrollController,
+                            itemCount: cards.length,
+                            itemBuilder: (context, index) {
+                              final card = cards[index];
+                              return ListTile(
+                                trailing:card==state.selectedCard? SvgPicture.asset('$iconUrl/ic_tick_circle.svg'):const SizedBox.shrink(),
+                                minLeadingWidth: 32,
+                                leading: SvgPicture.asset(
+                                  '$cardIcon/${card.iconPath}',
+                                  fit: BoxFit.cover,
+                                ),
+                                title: Text(
+                                  card.cardName,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                subtitle: Text(
+                                  'موجودی: ${card.balance.toStringAsFixed(0).toCurrencyFormat()} تومان',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .apply(color: AppColor.grayColor),
+                                ),
+                                onTap: () {
+                                  context.read<CardCubit>().setSelectedCard(card);
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        const Gap(8),
+                        InkWell(
+                          onTap: () {
+                            
+                            Navigator.pushNamed(context, AddCardScreen.routeName);
+                          },
+                          child: Row(
+                            children: [
+                              SvgPicture.asset('$iconUrl/ic_add_square.svg'),
+                              const Gap(5),
+                              Text('اضافه کردن کانال جدید',
+                                  style: Theme.of(context).textTheme.labelSmall)
+                            ],
+                          ),
+                        ),
+                        const Gap(16),
+                      ],
+                    ),
+                  );
+            }
+            return const SizedBox.shrink();
+          },
+        );
+      }
+    );
+  }
+}
+
+void a() {
+  // List<CardModel> cards = snapshot.data ?? [];
 }

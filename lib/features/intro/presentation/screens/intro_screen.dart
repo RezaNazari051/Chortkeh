@@ -8,7 +8,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../../../common/widgets/app_buttons.dart';
+import '../../../../core/widgets/app_buttons.dart';
+
 
 class IntroScreen extends StatefulWidget {
   static const String routeName = 'IntroScreen';

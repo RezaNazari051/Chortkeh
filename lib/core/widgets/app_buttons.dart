@@ -11,11 +11,13 @@ class FillElevatedButton extends StatelessWidget {
       this.width,
       this.height,
       this.backgroundColor,
+      this.textColor,
       this.textStyle});
 
   final void Function() onPressed;
   final String title;
   final Color? backgroundColor;
+  final Color? textColor;
   final TextStyle? textStyle;
   final double? width;
   final double? height;
@@ -35,7 +37,7 @@ class FillElevatedButton extends StatelessWidget {
       child: Text(
         title,
         style:
-            textStyle ?? theme.textTheme.labelSmall!.apply(color: Colors.white),
+            textStyle ?? theme.textTheme.labelSmall!.apply(color:textColor?? Colors.white),
       ),
     );
   }

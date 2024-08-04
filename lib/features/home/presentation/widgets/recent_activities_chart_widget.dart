@@ -24,6 +24,7 @@ class RecentActivitiesChartWidget extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
             border: Border.all(color: AppColor.cardBorderGrayColor),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(16)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,

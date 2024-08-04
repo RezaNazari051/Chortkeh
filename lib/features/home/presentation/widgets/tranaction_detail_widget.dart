@@ -1,20 +1,21 @@
-import 'package:chortkeh/common/utils/extensions.dart';
+import 'package:chortkeh/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 
-import '../../../../common/utils/constants.dart';
-import '../../../../common/utils/json_data.dart';
-import '../../../../common/widgets/app_buttons.dart';
-import '../../../../common/widgets/dialogs/delete_transaction_dialog.dart';
 import '../../../../config/dimens/responsive.dart';
 import '../../../../config/theme/app_color.dart';
+import '../../../../core/utils/constants.dart';
+import '../../../../core/utils/json_data.dart';
+import '../../../../core/widgets/app_buttons.dart';
+import '../../../../core/widgets/dialogs/delete_transaction_dialog.dart';
 import '../screens/home_screen.dart';
 
 class TransactionDetailWidget extends StatelessWidget {
   const TransactionDetailWidget({
     super.key,
-    required this.recentActivities, required this.index,
+    required this.recentActivities,
+    required this.index,
   });
 
   final List<RecentActivities> recentActivities;
@@ -22,63 +23,74 @@ class TransactionDetailWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme=Theme.of(context).textTheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-          border:
-              Border.all(color: AppColor.cardBorderGrayColor),
-          borderRadius: BorderRadius.circular(8)),
-      margin: const EdgeInsets.only(bottom: 10),
-      height: Responsive.isTablet() ? 85 : 65,
-      child: Row(
-        children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: recentActivities[index].color,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Center(
-              child: SvgPicture.asset(
-                  recentActivities[index].icon),
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    return InkWell(
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        height: Responsive.isTablet() ? 85 : 65,
+        child: Ink(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: AppColor.cardBorderGrayColor),
+              borderRadius: BorderRadius.circular(8)),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(8),
+            onTap: () {
+              showTransactionDetailBottomSheet(
+                  context, recentActivities, index);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: recentActivities[index].color,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(recentActivities[index].icon),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(recentActivities[index].category),
+                        Text(convertDateToJalali(recentActivities[index].date)),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  Text.rich(
+                    TextSpan(
+                      style: textTheme.bodySmall,
+                      text: recentActivities[index]
+                          .price
+                          .toStringAsFixed(0)
+                          .toCurrencyFormat(),
+                      children: [
+                        TextSpan(
+                          text: ' تومان',
+                          style: textTheme.displaySmall!
+                              .apply(color: AppColor.grayColor),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(recentActivities[index].category),
-                Text(convertDateToJalali(
-                    recentActivities[index].date)),
-              ],
-            ),
-          ),
-          const Spacer(),
-          Text.rich(
-            TextSpan(
-              style: textTheme.bodySmall,
-              text: recentActivities[index]
-                  .price
-                  .toStringAsFixed(0)
-                  .toCurrencyFormat(),
-              children: [
-                TextSpan(
-                  text: ' تومان',
-                  style: textTheme.displaySmall!
-                      .apply(color: AppColor.grayColor),
-                ),
-              ],
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
 }
+
 class TranactionDetailBottomSheet extends StatelessWidget {
   const TranactionDetailBottomSheet({
     super.key,
@@ -89,7 +101,7 @@ class TranactionDetailBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme=Theme.of(context).textTheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -160,7 +172,6 @@ class TranactionDetailBottomSheet extends StatelessWidget {
   }
 }
 
-
 class TranactionDetailBottomSheetRowData extends StatelessWidget {
   const TranactionDetailBottomSheetRowData({
     super.key,
@@ -191,4 +202,15 @@ class TranactionDetailBottomSheetRowData extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<dynamic> showTransactionDetailBottomSheet(
+    BuildContext context, List<RecentActivities> recentActivities, int index) {
+  return showModalBottomSheet(
+    context: context,
+    builder: (context) {
+      final recentActivity = recentActivities[index];
+      return TranactionDetailBottomSheet(recentActivity: recentActivity);
+    },
+  );
 }

@@ -1,6 +1,7 @@
-import 'package:chortkeh/common/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shamsi_date/shamsi_date.dart';
+
+import 'constants.dart';
 
 const String a = 'sda';
 
@@ -62,4 +63,10 @@ class Target {
       required this.amount,
       required this.progress,
       required this.image});
-}
+} 
+
+final List<String> pelehPelehFeatureDetail=[
+  'از صفحه «پله‌پله‌های من» چیزی که دوست داری پولش رو پس‌انداز کنی رو انتخاب کن. گشتی نبود؟ روی علامت + بزن و یه هدف واسه خودت درست کن. می‌تونی واسش اسم و حتی عکس از توی آلبوم موبایلت انتخاب کنی.',
+  'حالا پولی  که لازم داری رو ثبت کن تا بتونیم محاسبه کنیم و بهت پیشنهاد بدیم هر ماه چقدر پول پس‌انداز کنی. البته خودت هم خودت می‌تونی پیشنهاد بدی.',
+  'از اینجا به بعد از تو حرکت از چُرتکه برکت:)'
+];

@@ -1,13 +1,14 @@
-import 'package:chortkeh/common/utils/constants.dart';
-import 'package:chortkeh/common/utils/extensions.dart';
 import 'package:chortkeh/config/dimens/responsive.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
+import 'package:chortkeh/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math';
 
 import 'package:gap/gap.dart';
+
+import '../../../../core/utils/constants.dart';
 
 class BalanceWidget extends StatefulWidget {
   final double deposit;
@@ -22,6 +23,7 @@ class BalanceWidget extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _BalanceWidgetState createState() => _BalanceWidgetState();
 }
 

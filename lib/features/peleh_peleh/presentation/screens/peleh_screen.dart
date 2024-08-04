@@ -1,9 +1,7 @@
-import 'package:chortkeh/common/utils/arguments.dart';
-import 'package:chortkeh/common/utils/constants.dart';
-import 'package:chortkeh/common/utils/extensions.dart';
-import 'package:chortkeh/common/utils/json_data.dart';
-import 'package:chortkeh/common/widgets/app_buttons.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
+import 'package:chortkeh/core/operation/locator/locator.dart';
+import 'package:chortkeh/core/operation/prefs_operator/prefs_operator.dart';
+import 'package:chortkeh/core/utils/extensions.dart';
 import 'package:chortkeh/features/peleh_peleh/presentation/blocs/cubit/cubit/change_tabbar_index_cubit.dart';
 import 'package:chortkeh/features/peleh_peleh/presentation/screens/new_peleh_screen.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +10,40 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 
-class PelehScreen extends StatelessWidget {
+import '../../../../core/utils/arguments.dart';
+import '../../../../core/utils/constants.dart';
+import '../../../../core/utils/json_data.dart';
+import '../../../../core/widgets/app_buttons.dart';
+
+class PelehScreen extends StatefulWidget {
   static const String routeName = '/peleh-peleh';
   const PelehScreen({super.key});
+
+  @override
+  State<PelehScreen> createState() => _PelehScreenState();
+}
+
+class _PelehScreenState extends State<PelehScreen> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) async {
+        final PrefsOperator prefsOperator = locator<PrefsOperator>();
+        if (prefsOperator.getFirstTime('pelehScreen')) {
+          showModalBottomSheet(
+            isScrollControlled: true,
+            enableDrag: false,
+            isDismissible: false,
+            context: context,
+            builder: (context) {
+              return const AboutPelehPelehBottomSheet();
+            },
+          );
+        }
+      },
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -251,6 +280,85 @@ class PelehScreen extends StatelessWidget {
   }
 }
 
+class AboutPelehPelehBottomSheet extends StatelessWidget {
+  const AboutPelehPelehBottomSheet({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: LayoutBuilder(builder: (context, constraints) {
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.1),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(width: double.infinity),
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  width: 60,
+                  height: 5,
+                  decoration: BoxDecoration(
+                      color: AppColor.cardBorderGrayColor,
+                      borderRadius: BorderRadius.circular(28)),
+                ),
+                const Gap(52),
+                SvgPicture.asset('$imageUrl/img_about_peleh_peleh.svg'),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 32),
+                  child: Text(
+                    'برای رسیدن به هدف‌هات پله بچین.\nتا آخرین پله کنارتیم:)',
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .copyWith(height: 2),
+                  ),
+                ),
+                ...List.generate(
+                    pelehPelehFeatureDetail.length,
+                    (index) => Padding(
+                          padding: EdgeInsets.only(
+                              bottom:
+                                  index != pelehPelehFeatureDetail.length - 1
+                                      ? 10
+                                      : 40),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SvgPicture.asset('$iconUrl/ic_tick_circle.svg'),
+                              const Gap(5),
+                              Expanded(
+                                child: Text(
+                                  pelehPelehFeatureDetail[index],
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall!
+                                      .apply(color: AppColor.grayColor,fontSizeDelta: 2),
+                                  maxLines: 5,
+                                  textAlign: TextAlign.start,
+                                ),
+                              )
+                            ],
+                          ),
+                        )),
+                FillElevatedButton(onPressed: () {
+                  final PrefsOperator prefsOperator=locator<PrefsOperator>();
+                  prefsOperator.setFirstTime('pelehScreen', false);
+                  Navigator.pop(context);
+                }, title: 'پله‌ها رو بچین')
+              ],
+            ),
+          ),
+        );
+      }),
+    );
+  }
+}
+
 class NewPelehBottomSheet extends StatelessWidget {
   const NewPelehBottomSheet({
     super.key,
@@ -292,8 +400,11 @@ class NewPelehBottomSheet extends StatelessWidget {
                 return InkWell(
                   borderRadius: BorderRadius.circular(8),
                   onTap: () {
-                    Navigator.pushNamed(context, NewPelehScreen.routeName,arguments: 
-                    NewPelehArgument(id: target.id, image: target.image, name: target.name));
+                    Navigator.pushNamed(context, NewPelehScreen.routeName,
+                        arguments: NewPelehArgument(
+                            id: target.id,
+                            image: target.image,
+                            name: target.name));
                   },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

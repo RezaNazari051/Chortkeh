@@ -1,10 +1,11 @@
-import 'package:chortkeh/common/screens/main_wrapper.dart';
-import 'package:chortkeh/common/utils/constants.dart';
-import 'package:chortkeh/common/widgets/app_buttons.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+
+import '../../screens/main_wrapper.dart';
+import '../../utils/constants.dart';
+import '../app_buttons.dart';
 
 class DeleteTransactionDialog extends StatelessWidget {
   const DeleteTransactionDialog({

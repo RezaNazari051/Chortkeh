@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChartSectionCubit extends Cubit<int> {
   ChartSectionCubit() : super(-1);
