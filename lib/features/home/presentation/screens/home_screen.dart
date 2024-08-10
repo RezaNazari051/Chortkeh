@@ -1,8 +1,6 @@
 import 'package:chortkeh/config/theme/app_color.dart';
-import 'package:chortkeh/core/utils/extensions.dart';
 import 'package:chortkeh/features/home/presentation/bloc/manage_cards_bloc/card_cubit.dart';
 import 'package:chortkeh/features/home/presentation/widgets/recent_activities_chart_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,11 +8,10 @@ import 'package:gap/gap.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../../core/utils/json_data.dart';
-import '../../data/model/card_model.dart';
 import '../widgets/balance_indicator_widget.dart';
+import '../widgets/channel_list_bottom_sheet.dart';
 import '../widgets/features_cards_list.dart';
 import '../widgets/tranaction_detail_widget.dart';
-import 'add_card_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,7 +21,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<List<CardModel>>? cardList;
 
   @override
   void initState() {
@@ -32,9 +28,23 @@ class _HomeScreenState extends State<HomeScreen> {
     // final dbHelper = locator<CardsDataHelper>();
     // cardList = dbHelper.getCards();
 
- 
+  WidgetsBinding.instance.addPostFrameCallback((_){
+    context.read<CardCubit>().loadCards();
+  });
     // _cardsFuture=dbHelper.getCards();
     super.initState();
+  }
+
+void _showCardListModal(BuildContext context)  {
+     showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return BlocProvider.value(
+          value: context.read<CardCubit>(),
+          child: const ChannelListBottomSheet(),
+        );
+      },
+    );
   }
 
   @override
@@ -107,20 +117,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: textTheme.labelMedium,
                       ),
                       OutlinedButton(
-                        onPressed: () {
-                          // Navigator.pushNamed(context, AddCardScreen.routeName);
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-        context.read<CardCubit>().loadCards();
-
-                              return CardListModal(
-                                cards: cardList,
-                              );
-                              // return ManageChannelsBottomSheet(cardHelper: cardHelper, textTheme: textTheme);
-                            },
-                          );
-                        },
+                        onPressed: () => _showCardListModal(context),
+            
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -254,111 +252,35 @@ class ManageChannelsBottomSheet extends StatelessWidget {
     );
   }
 }
-
-String convertDateToJalali(DateTime dateTime) {
+enum FormantMode{
+  withTime,
+  withDayName,
+  withMonthAndDayName,
+  withMonthName,
+}
+String formatJalali(DateTime dateTime ,{FormantMode mode=FormantMode.withDayName}) {
   final Jalali jalali = Jalali.fromDateTime(dateTime);
 
   final date = jalali.formatter;
-
+  // if(showTime){
   return '${date.wN}، ${date.d}${date.mN}، ${date.y}، ${jalali.hour}:${jalali.minute}';
+
+  // }
+  // return '${date.wN}، ${date.d}${date.mN}، ${date.y}';
+
 }
 
-class CardListModal extends StatelessWidget {
-  final Future<List<CardModel>>? cards;
-  const CardListModal({
-    super.key,
-    required this.cards,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-     expand: false,
-                builder: (context, scrollController) {
-        return BlocBuilder<CardCubit, CardState>(
-          builder: (context, state) {
-            if (state is GetCardsLoading) {
-              return const Center(
-                child: CupertinoActivityIndicator(),
-              );
-            } else if (state is GetCardsCompleted) {
-              final cards = state.cards;
-             return Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16.0),
-                        topRight: Radius.circular(16.0),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            'کانال‌های ورودی',
-                            style: TextStyle(
-                                fontSize: 18.0, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            controller: scrollController,
-                            itemCount: cards.length,
-                            itemBuilder: (context, index) {
-                              final card = cards[index];
-                              return ListTile(
-                                trailing:card==state.selectedCard? SvgPicture.asset('$iconUrl/ic_tick_circle.svg'):const SizedBox.shrink(),
-                                minLeadingWidth: 32,
-                                leading: SvgPicture.asset(
-                                  '$cardIcon/${card.iconPath}',
-                                  fit: BoxFit.cover,
-                                ),
-                                title: Text(
-                                  card.cardName,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                                subtitle: Text(
-                                  'موجودی: ${card.balance.toStringAsFixed(0).toCurrencyFormat()} تومان',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .apply(color: AppColor.grayColor),
-                                ),
-                                onTap: () {
-                                  context.read<CardCubit>().setSelectedCard(card);
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                        const Gap(8),
-                        InkWell(
-                          onTap: () {
-                            
-                            Navigator.pushNamed(context, AddCardScreen.routeName);
-                          },
-                          child: Row(
-                            children: [
-                              SvgPicture.asset('$iconUrl/ic_add_square.svg'),
-                              const Gap(5),
-                              Text('اضافه کردن کانال جدید',
-                                  style: Theme.of(context).textTheme.labelSmall)
-                            ],
-                          ),
-                        ),
-                        const Gap(16),
-                      ],
-                    ),
-                  );
-            }
-            return const SizedBox.shrink();
-          },
-        );
-      }
-    );
-  }
+Jalali gregorianToJalali(DateTime gregorianDate){
+  final Jalali jalaliDate=gregorianDate.toJalali();
+  return Jalali(jalaliDate.year,jalaliDate.month,jalaliDate.day);
 }
+
+DateTime jalaliToDateTime(Jalali jalaliDate) {
+  final Gregorian gregorianDate = jalaliDate.toGregorian();
+  return DateTime(gregorianDate.year, gregorianDate.month, gregorianDate.day);
+}
+
+
 
 void a() {
   // List<CardModel> cards = snapshot.data ?? [];

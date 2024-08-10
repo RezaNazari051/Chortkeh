@@ -20,7 +20,8 @@ class AddCarSuccesfulDialog extends StatelessWidget {
         titlePadding: EdgeInsets.zero,
         iconPadding: EdgeInsets.zero,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -28,25 +29,18 @@ class AddCarSuccesfulDialog extends StatelessWidget {
             Row(
               children: [
                 IconButton(
-                    onPressed: () async{
+                    onPressed: () async {
                       if (context.mounted) {
-                        context.read<CardCubit>();
+                        context.read<CardCubit>().loadCards();
                         Navigator.pop(context);
                         Navigator.pop(context);
-                        // Navigator.popUntil(
-                        //     context,
-                        //     (route) =>
-                        //         route.settings.name == MainWrapper.routeName);    
-                                                  }
+                      }
                     },
-                    icon: SvgPicture.asset(
-                        '$iconUrl/ic_close_circle.svg')),
+                    icon: SvgPicture.asset('$iconUrl/ic_close_circle.svg')),
               ],
             ),
-            Lottie.asset(
-                '$animUrl/add_card_successful_anim.json',
-                height: 200,
-                fit: BoxFit.cover),
+            Lottie.asset('$animUrl/add_card_successful_anim.json',
+                height: 200, fit: BoxFit.cover),
             const Gap(10),
             Text(
               'کارت با موفقیت اضافه شد',

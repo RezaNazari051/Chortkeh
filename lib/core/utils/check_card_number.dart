@@ -37,7 +37,7 @@ final List<BankModel> bankList = [
   BankModel(name: 'بانک کشاورزی', digits: '603770', iconPath: 'ic_coin.svg'),
   BankModel(name: 'بانک مسکن', digits: '628023', iconPath: 'ic_mashkan.svg'),
   BankModel(name: 'پست بانک ایران', digits: '627760', iconPath: 'ic_coin.svg'),
-  BankModel(name: 'بانک  توسعه تعاون', digits: '502908', iconPath: 'ic_mashkan.svg'),
+  BankModel(name: 'بانک مسکن', digits: '502908', iconPath: 'ic_maskan.svg'),
   BankModel(name: 'بانک اقتصاد نوین', digits: '627412', iconPath: 'ic_coin.svg'),
   BankModel(name: 'بانک پارسیان', digits: '622106', iconPath: 'ic_parsian.svg'),
   BankModel(name: 'بانک پاسارگاد', digits: '502229', iconPath: 'ic_coin.svg'),

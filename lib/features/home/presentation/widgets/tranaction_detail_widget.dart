@@ -60,7 +60,7 @@ class TransactionDetailWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(recentActivities[index].category),
-                        Text(convertDateToJalali(recentActivities[index].date)),
+                        Text(formatJalali(recentActivities[index].date)),
                       ],
                     ),
                   ),
@@ -154,7 +154,7 @@ class TranactionDetailBottomSheet extends StatelessWidget {
               title: 'برداشت از', detail: recentActivity.bankCard),
           TranactionDetailBottomSheetRowData(
             title: 'تاریخ و ساعت',
-            detail: convertDateToJalali(recentActivity.date),
+            detail: formatJalali(recentActivity.date),
             marginBottom: 16,
           ),
           FillElevatedButton(

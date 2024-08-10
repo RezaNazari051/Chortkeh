@@ -38,8 +38,27 @@ class CardCubit extends Cubit<CardState> {
       emit(GetCardsError('Failed to add card'));
     }
   }
+  void deleteCard(String id)async{
+    try {
+      await dbHelper.deleteCard(id);
+      loadCards();
+    } catch (e) {
+      emit(GetCardsError('Faoled to delete card'));
+      
+    }
+  }
   void deleteAllCards(){
     dbHelper.deleteAllCards();
+  }
+  void updateCard(CardModel card)async{
+    try{
+      dbHelper.updateCard(card);
+
+    }catch(e){
+      if (kDebugMode) {
+        emit(GetCardsError(e.toString()));
+      }
+    }
   }
 
   void setSelectedCard(CardModel card){

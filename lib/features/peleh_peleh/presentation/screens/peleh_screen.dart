@@ -109,7 +109,9 @@ class _PelehScreenState extends State<PelehScreen> {
                   'پله پله های من',
                 ),
                 leading: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   icon: SvgPicture.asset(
                     '$iconUrl/ic_arrow_right.svg',
                   ),
@@ -118,129 +120,41 @@ class _PelehScreenState extends State<PelehScreen> {
                   preferredSize: const Size.fromHeight(60),
                   child: SizedBox(
                     height: 40,
-                    child: ChortkehTabBar(state: state),
+                    child: ChortkehTabBar(state: state, onTap: (index) {
+                      context.read<ChangeTabbarIndexCubit>().changeIndex(index);
+                      },
+                      titles: const [
+                        'فعال',
+                        'تکمیل شده'
+                      ],
+                      ),
                   ),
                 ),
               ),
-              body: IndexedStack(
-                index: state,
+              body: Column(
                 children: [
-                  Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      CustomScrollView(
-                        slivers: [
-                          // _notFoundPelehPlaceholder(context),
-                          SliverPadding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 24,
-                                horizontal: constraints.maxWidth * 0.05),
-                            sliver: SliverGrid.builder(
-                              itemCount: 3,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 1.4,
-                                      crossAxisSpacing: 16,
-                                      mainAxisSpacing: 12),
-                              itemBuilder: (context, index) {
-                                return LayoutBuilder(
-                                    builder: (context, onstraints) {
-                                  final Target peleh = activePelehList[index];
-                                  return InkWell(
-                                    borderRadius: BorderRadius.circular(8),
-                                    onTap: () {},
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: AppColor.lightGrayColor),
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Stack(
-                                              children: [
-                                                SizedBox(
-                                                  width: 49,
-                                                  height: 49,
-                                                  child: TweenAnimationBuilder(
-                                                    tween: Tween<double>(
-                                                        begin: 0.0,
-                                                        end: peleh.progress),
-                                                    duration: const Duration(
-                                                        seconds: 1),
-                                                    builder: (context, value,
-                                                            child) =>
-                                                        CircularProgressIndicator(
-                                                      value: value,
-                                                      color:
-                                                          AppColor.greenColor,
-                                                      strokeWidth: 5,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(5),
-                                                  width: 49,
-                                                  height: 49,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color:
-                                                        AppColor.lightBlueColor,
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: FittedBox(
-                                                    child: SvgPicture.asset(
-                                                      '$targetIcon/${peleh.image}',
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const Gap(8),
-                                            Text(
-                                                onstraints.maxHeight.toString(),
-                                                style: textTheme.labelSmall),
-                                            const Gap(3),
-                                            Text(
-                                              '${peleh.amount.toString().toCurrencyFormat()}تومان',
-                                              style: textTheme.displaySmall!
-                                                  .apply(
-                                                      color:
-                                                          AppColor.grayColor),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                });
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                      Positioned(
-                        bottom: 40,
-                        child: FillElevatedButton(
-                            onPressed: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return NewPelehBottomSheet(
-                                      textTheme: textTheme,
-                                      newTargetList: newTargetList);
-                                },
-                              );
-                            },
-                            title: 'ساخت پله‌پله‌'),
-                      ),
-                    ],
+                  Expanded(
+                    child: IndexedStack(
+                      index: state,
+                      children: [
+                        ActivePelehScreen(activePelehList: activePelehList,constraints:constraints ,),
+                        const SizedBox.shrink()
+                      ],
+                    ),
                   ),
+                    FillElevatedButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return NewPelehBottomSheet(
+                                  textTheme: textTheme,
+                                  newTargetList: newTargetList);
+                            },
+                          );
+                        },
+                        title: 'ساخت پله‌پله‌'),
+                        const Gap(64)
                 ],
               ),
             );
@@ -276,6 +190,119 @@ class _PelehScreenState extends State<PelehScreen> {
           )
         ],
       ),
+    );
+  }
+}
+
+class ActivePelehScreen extends StatelessWidget {
+  const ActivePelehScreen({
+    super.key,
+    required this.activePelehList,
+    required this.constraints
+  });
+
+  final List<Target> activePelehList;
+  final BoxConstraints constraints;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme=Theme.of(context).textTheme;
+    
+    return CustomScrollView(
+      slivers: [
+        // _notFoundPelehPlaceholder(context),
+        SliverPadding(
+          padding: EdgeInsets.symmetric(
+              vertical: 24,
+              horizontal: constraints.maxWidth * 0.05),
+          sliver: SliverGrid.builder(
+            itemCount: 3,
+            gridDelegate:
+                const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1.4,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 12),
+            itemBuilder: (context, index) {
+              return LayoutBuilder(
+                  builder: (context, onstraints) {
+                final Target peleh = activePelehList[index];
+                return InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {},
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: AppColor.lightGrayColor),
+                        borderRadius:
+                            BorderRadius.circular(8)),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Stack(
+                            children: [
+                              SizedBox(
+                                width: 49,
+                                height: 49,
+                                child: TweenAnimationBuilder(
+                                  tween: Tween<double>(
+                                      begin: 0.0,
+                                      end: peleh.progress),
+                                  duration: const Duration(
+                                      seconds: 1),
+                                  builder: (context, value,
+                                          child) =>
+                                      CircularProgressIndicator(
+                                    value: value,
+                                    color:
+                                        AppColor.greenColor,
+                                    strokeWidth: 5,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding:
+                                    const EdgeInsets.all(5),
+                                width: 49,
+                                height: 49,
+                                decoration:
+                                    const BoxDecoration(
+                                  color:
+                                      AppColor.lightBlueColor,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: FittedBox(
+                                  child: SvgPicture.asset(
+                                    '$targetIcon/${peleh.image}',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Gap(8),
+                          Text(
+                              onstraints.maxHeight.toString(),
+                              style: textTheme.labelSmall),
+                          const Gap(3),
+                          Text(
+                            '${peleh.amount.toString().toCurrencyFormat()}تومان',
+                            style: textTheme.displaySmall!
+                                .apply(
+                                    color:
+                                        AppColor.grayColor),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              });
+            },
+          ),
+        )
+      ],
     );
   }
 }
@@ -433,15 +460,15 @@ class NewPelehBottomSheet extends StatelessWidget {
 }
 
 class ChortkehTabBar extends StatefulWidget {
-  const ChortkehTabBar({super.key, required this.state});
+  const ChortkehTabBar({super.key, required this.state, required this.onTap, required this.titles});
   final int state;
-
+final Function(int) onTap;
+final List<String>titles;
   @override
   State<ChortkehTabBar> createState() => _ChortkehTabBarState();
 }
 
 int selected = 0;
-
 class _ChortkehTabBarState extends State<ChortkehTabBar> {
   @override
   Widget build(BuildContext context) {
@@ -454,8 +481,8 @@ class _ChortkehTabBarState extends State<ChortkehTabBar> {
   List<Widget> buildTabs() {
     // Build tabs with priority order based on selection
     List<Widget> tabs = [
-      _getTab(positionRigth: 20.w, index: 0, title: 'فعال'),
-      _getTab(positionLeft: 20.w, index: 1, title: 'تکمیل شده'),
+      _getTab(positionRigth: 20.w, index: 0, title: widget.titles[0]),
+      _getTab(positionLeft: 20.w, index: 1, title: widget.titles[1]),
     ];
 
     // If selected is 0, index 1 tab should be on top, otherwise index 0 tab
@@ -478,7 +505,8 @@ class _ChortkehTabBarState extends State<ChortkehTabBar> {
         borderRadius: BorderRadius.circular(8),
         onTap: () {
           if (index != widget.state) {
-            context.read<ChangeTabbarIndexCubit>().changeIndex(index);
+            widget.onTap(index);
+            // context.read<ChangeTabbarIndexCubit>().changeIndex(index);
           }
         },
         child: Container(

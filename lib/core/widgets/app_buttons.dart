@@ -27,7 +27,7 @@ class FillElevatedButton extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        elevation: 0,
+        elevation: 0,overlayColor: textColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: backgroundColor ?? theme.primaryColor,
         fixedSize: Size(

@@ -26,7 +26,14 @@ CardsDataHelper(this._box);
     return  _box.values.toList();
   }
   Future<void> updateCard(CardModel card)async{
+      if(await checkCardIsExist(card)){
+      // throw Exception('شماره کارت قبلا وجود دارد');
     await _box.put(card.id, card);
+
+    }else{
+      throw Exception('چنین کارتی وجود ندارد');
+    }
+    
 
   }
 
@@ -35,7 +42,7 @@ CardsDataHelper(this._box);
   }
   Future<bool>checkCardIsExist(CardModel card)async{
   final cards= _box.values.toList();
-  return cards.any((element) => element.cardNumber==card.cardNumber);
+  return cards.any((element) => element.id==card.id);
 }
 
 Future<void>deleteAllCards()async{

@@ -2,6 +2,7 @@ import 'package:chortkeh/config/dimens/responsive.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:chortkeh/core/bloc/bottom_navbar_cubit/bottom_navbar_cubit.dart';
 import 'package:chortkeh/features/home/presentation/screens/home_screen.dart';
+import 'package:chortkeh/features/transaction/presentation/screens/add_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -123,13 +124,7 @@ class _MainWrapperState extends State<MainWrapper>
                     child: FittedBox(
                       child: FloatingActionButton(
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  '${20.w.toString()}\n ${constraints.maxWidth *
-                                      0.13}'),
-                            ),
-                          );
+                          Navigator.pushNamed(context, AddTransactionScreen.routeName);
                         },
                         shape: const CircleBorder(),
                         child: const Icon(Icons.add),
