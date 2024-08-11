@@ -5,23 +5,27 @@ class TransactionFormState {
   final CategoryStatus? categoryStatus;
   final DateStatus? dateStatus;
   final TimeStatus? timeStatus;
+  final AddTransactionStatus transactionStatus;
   TransactionFormState(
-    {this.channelStatus,this.categoryStatus,this.dateStatus,this.timeStatus}
-  );
+      {required this.transactionStatus,
+      this.channelStatus,
+      this.categoryStatus,
+      this.dateStatus,
+      this.timeStatus});
 
-  TransactionFormState copyWith(
-    {
+  TransactionFormState copyWith({
+    AddTransactionStatus? newTransactionStatus,
     ChannelStatus? newChannelStatus,
-CategoryStatus? newCategoryStatus,
-DateStatus? newDateStatus,
-TimeStatus? newTimeStatus,
-    }
-  ){
+    CategoryStatus? newCategoryStatus,
+    DateStatus? newDateStatus,
+    TimeStatus? newTimeStatus,
+  }) {
     return TransactionFormState(
-channelStatus: newChannelStatus??channelStatus,
-categoryStatus: newCategoryStatus??categoryStatus,
-dateStatus: newDateStatus ?? dateStatus,
-timeStatus: newTimeStatus??timeStatus,
+      channelStatus: newChannelStatus ?? channelStatus,
+      categoryStatus: newCategoryStatus ?? categoryStatus,
+      dateStatus: newDateStatus ?? dateStatus,
+      timeStatus: newTimeStatus ?? timeStatus,
+      transactionStatus: newTransactionStatus ?? transactionStatus,
     );
   }
 }

@@ -15,6 +15,7 @@ class PTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.inputFormatters,
     this.textDirection,
+    this.focusBorderColor,
   });
 
   final String title;
@@ -29,8 +30,11 @@ class PTextFormField extends StatelessWidget {
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
 
+  final Color? focusBorderColor;
+
   @override
   Widget build(BuildContext context) {
+    final InputDecorationTheme theme = Theme.of(context).inputDecorationTheme;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,10 +54,12 @@ class PTextFormField extends StatelessWidget {
                   child: suffixIcon!,
                 ),
               TextFormField(
-                
                 maxLengthEnforcement:
                     MaxLengthEnforcement.none, // عدم محاسبه فاصله‌ها
-
+                    
+                onTapOutside: (event) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
                 textDirection: textDirection,
                 inputFormatters: inputFormatters,
                 onChanged: onChanged,
@@ -63,7 +69,17 @@ class PTextFormField extends StatelessWidget {
                 controller: controller,
                 keyboardType: keyboardType,
                 decoration: InputDecoration(
-                  
+                    focusedBorder: theme.focusedBorder!.copyWith(
+                        borderSide: BorderSide(
+                            width: 1,
+                            color: focusBorderColor ??
+                                theme.focusedBorder!.borderSide.color)),
+                    // enabledBorder: theme.enabledBorder!.copyWith(
+                    //     borderSide: BorderSide(
+                    //         width: 1,
+                    //         color: controller.text.isNotEmpty
+                    //             ? Colors.black
+                    //             : theme.enabledBorder!.borderSide.color)),
                     counterText: '',
                     hintText: hintText,
                     contentPadding: EdgeInsets.only(

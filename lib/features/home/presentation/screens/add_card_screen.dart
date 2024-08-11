@@ -61,6 +61,14 @@ class _AddCardScreenState extends State<AddCardScreen> {
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
         appBar: AppBar(
+             leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: SvgPicture.asset(
+                  '$iconUrl/ic_arrow_right.svg',
+                ),
+              ),
           actions: [
             if (editCardModel != null)
               IconButton(

@@ -1,3 +1,4 @@
+import 'package:chortkeh/features/transaction/presentation/screens/add_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,8 +9,9 @@ import '../../data/data_source/categories.dart';
 import '../../data/models/transaction_category_model.dart';
 import '../bloc/transaction_form_bloc/bloc/transaction_form_bloc.dart';
 class SelectCategoryBottomSheetWidget extends StatelessWidget {
+  final TransactionFormWidgetMode mode;
   const SelectCategoryBottomSheetWidget({
-    super.key,
+    super.key, required this.mode,
   });
 
   @override
@@ -35,8 +37,10 @@ class SelectCategoryBottomSheetWidget extends StatelessWidget {
             separatorBuilder: (context, index) => const Gap(16),
             itemCount: depositTransactionCatefories.length,
             itemBuilder: (listContext, index) {
-              final CategoryModel category =
-                  depositTransactionCatefories[index];
+              final CategoryModel category = mode==TransactionFormWidgetMode.deposit?
+                  depositTransactionCatefories[index]:
+                  withdrawlTransactionCategory[index];
+                  
               return Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: constraints.maxWidth * 0.05),

@@ -44,6 +44,14 @@ class _NewPelehScreenState extends State<NewPelehScreen> {
     debugPrint(ModalRoute.of(context)!.settings.name.toString());
     return Scaffold(
       appBar: AppBar(
+           leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: SvgPicture.asset(
+                  '$iconUrl/ic_arrow_right.svg',
+                ),
+              ),
         title: Text('پله‌پله ${args.name}'),
       ),
       body: LayoutBuilder(

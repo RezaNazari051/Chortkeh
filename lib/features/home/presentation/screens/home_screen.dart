@@ -252,23 +252,42 @@ class ManageChannelsBottomSheet extends StatelessWidget {
     );
   }
 }
-enum FormantMode{
+enum FormatMode{
   withTime,
-  withDayName,
   withMonthAndDayName,
   withMonthName,
 }
-String formatJalali(DateTime dateTime ,{FormantMode mode=FormantMode.withDayName}) {
+
+ String formatJalali(DateTime dateTime ,{FormatMode mode=FormatMode.withTime}) {
   final Jalali jalali = Jalali.fromDateTime(dateTime);
 
   final date = jalali.formatter;
-  // if(showTime){
+
+  switch (mode) {
+    case FormatMode.withTime:
   return '${date.wN}، ${date.d}${date.mN}، ${date.y}، ${jalali.hour}:${jalali.minute}';
+    case FormatMode.withMonthAndDayName:
+  return '${date.wN}، ${date.d}${date.mN}';
+    case FormatMode.withMonthName:
+  return   '${date.d}، ${date.mN} ${date.y}';
+    default: '';
+
+  }
+
+  return '';
+
+
+  // if(showTime){
+  // return '${date.wN}، ${date.d}${date.mN}، ${date.y}، ${jalali.hour}:${jalali.minute}';
 
   // }
   // return '${date.wN}، ${date.d}${date.mN}، ${date.y}';
 
 }
+  String formatTime(DateTime time){
+    final String formattedTime='${time.minute} : ${time.hour}';
+    return formattedTime;
+  }
 
 Jalali gregorianToJalali(DateTime gregorianDate){
   final Jalali jalaliDate=gregorianDate.toJalali();

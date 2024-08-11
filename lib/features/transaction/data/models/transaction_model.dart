@@ -9,7 +9,7 @@ enum TransactionType{
 @HiveType(typeId: 1)
 class TransactionModel{
   @HiveField(0)
-  final String id;
+   String? id;
   @HiveField(1)
   final String cardId;
   @HiveField(2)
@@ -21,5 +21,5 @@ class TransactionModel{
   @HiveField(5)
   final TransactionType type;
 
-  TransactionModel({required this.id,required this.cardId,required this.categoryId,required this.amount,required this.dateTime,required this.type});
+  TransactionModel({ this.id,required this.cardId,required this.categoryId,required this.amount,required this.dateTime,required this.type});
 }

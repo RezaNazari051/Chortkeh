@@ -31,3 +31,12 @@ class SelectTransactionTimeEvent extends TransactionFormEvent{
   List<Object?> get props => [time];
 
 }
+
+class AddTransactionEvent extends TransactionFormEvent{
+  final TransactionModel transactionModel;
+
+  AddTransactionEvent({required this.transactionModel});
+  @override
+  List<Object?> get props => [transactionModel];
+
+}
