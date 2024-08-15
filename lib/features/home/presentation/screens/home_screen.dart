@@ -1,6 +1,9 @@
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:chortkeh/features/home/presentation/bloc/manage_cards_bloc/card_cubit.dart';
-import 'package:chortkeh/features/home/presentation/widgets/recent_activities_chart_widget.dart';
+import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/get_transaction_status.dart';
+import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/recent_transactions_bloc.dart';
+import 'package:chortkeh/features/transaction/data/models/transaction_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -21,22 +24,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   void initState() {
     // final CardHelper dbHelper=locator<CardHelper>();
     // final dbHelper = locator<CardsDataHelper>();
     // cardList = dbHelper.getCards();
 
-  WidgetsBinding.instance.addPostFrameCallback((_){
-    context.read<CardCubit>().loadCards();
-  });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<CardCubit>().loadCards();
+      context.read<RecentTransactionsBloc>().add(GetAllTransactionsEvent(type: TransactionType.withdraw));
+    });
     // _cardsFuture=dbHelper.getCards();
     super.initState();
   }
 
-void _showCardListModal(BuildContext context)  {
-     showModalBottomSheet(
+  void _showCardListModal(BuildContext context) {
+    showModalBottomSheet(
       context: context,
       builder: (context) {
         return BlocProvider.value(
@@ -118,7 +121,6 @@ void _showCardListModal(BuildContext context)  {
                       ),
                       OutlinedButton(
                         onPressed: () => _showCardListModal(context),
-            
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -181,16 +183,29 @@ void _showCardListModal(BuildContext context)  {
 
               const SliverGap(20),
 
-              RecentActivitiesChartWidget(constraints: constraints),
+              // RecentActivitiesChartWidget(constraints: constraints),
 
-              const SliverGap(12),
-              SliverList.builder(
-                itemCount: recentActivities.length,
-                itemBuilder: (context, index) {
-                  return TransactionDetailWidget(
-                      recentActivities: recentActivities, index: index);
+              const SliverGap(12), 
+              BlocBuilder<RecentTransactionsBloc, RecentTransactionsState>(
+                builder: (context, state) {
+                  if (state.getTransactionStatus is GetTransactionLoading) {
+                    return const SliverToBoxAdapter(child: CupertinoActivityIndicator());
+                  }  
+                  else if (state.getTransactionStatus is GetTransactionCompeted) {
+                    final completedState=state.getTransactionStatus as GetTransactionCompeted;
+                    print(completedState.transactions.length);
+                    return SliverList.builder(
+                      itemCount: completedState.transactions.length,
+                      itemBuilder: (context, index) {
+                        return TransactionDetailWidget(
+                            recentActivities: completedState.transactions, index: index);
+                      },
+                    );
+                  }
+                  return const SliverGap(0);
                 },
-              )
+              ),
+              const SliverGap(50)
             ],
           ),
         );
@@ -252,54 +267,53 @@ class ManageChannelsBottomSheet extends StatelessWidget {
     );
   }
 }
-enum FormatMode{
+
+enum FormatMode {
   withTime,
   withMonthAndDayName,
   withMonthName,
 }
 
- String formatJalali(DateTime dateTime ,{FormatMode mode=FormatMode.withTime}) {
+String formatJalali(DateTime dateTime,
+    {FormatMode mode = FormatMode.withTime}) {
   final Jalali jalali = Jalali.fromDateTime(dateTime);
 
   final date = jalali.formatter;
 
   switch (mode) {
     case FormatMode.withTime:
-  return '${date.wN}، ${date.d}${date.mN}، ${date.y}، ${jalali.hour}:${jalali.minute}';
+      return '${date.wN}، ${date.d}${date.mN}، ${date.y}، ${jalali.hour}:${jalali.minute}';
     case FormatMode.withMonthAndDayName:
-  return '${date.wN}، ${date.d}${date.mN}';
+      return '${date.wN}، ${date.d}${date.mN}';
     case FormatMode.withMonthName:
-  return   '${date.d}، ${date.mN} ${date.y}';
-    default: '';
-
+      return '${date.d}، ${date.mN} ${date.y}';
+    default:
+      '';
   }
 
   return '';
-
 
   // if(showTime){
   // return '${date.wN}، ${date.d}${date.mN}، ${date.y}، ${jalali.hour}:${jalali.minute}';
 
   // }
   // return '${date.wN}، ${date.d}${date.mN}، ${date.y}';
-
 }
-  String formatTime(DateTime time){
-    final String formattedTime='${time.minute} : ${time.hour}';
-    return formattedTime;
-  }
 
-Jalali gregorianToJalali(DateTime gregorianDate){
-  final Jalali jalaliDate=gregorianDate.toJalali();
-  return Jalali(jalaliDate.year,jalaliDate.month,jalaliDate.day);
+String formatTime(DateTime time) {
+  final String formattedTime = '${time.minute} : ${time.hour}';
+  return formattedTime;
+}
+
+Jalali gregorianToJalali(DateTime gregorianDate) {
+  final Jalali jalaliDate = gregorianDate.toJalali();
+  return Jalali(jalaliDate.year, jalaliDate.month, jalaliDate.day);
 }
 
 DateTime jalaliToDateTime(Jalali jalaliDate) {
   final Gregorian gregorianDate = jalaliDate.toGregorian();
   return DateTime(gregorianDate.year, gregorianDate.month, gregorianDate.day);
 }
-
-
 
 void a() {
   // List<CardModel> cards = snapshot.data ?? [];

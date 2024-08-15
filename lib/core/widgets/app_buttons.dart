@@ -1,6 +1,7 @@
 import 'package:chortkeh/config/dimens/responsive.dart';
 import 'package:chortkeh/config/dimens/sizer.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FillElevatedButton extends StatelessWidget {
@@ -12,7 +13,7 @@ class FillElevatedButton extends StatelessWidget {
       this.height,
       this.backgroundColor,
       this.textColor,
-      this.textStyle});
+      this.textStyle,  this.loading=false});
 
   final void Function() onPressed;
   final String title;
@@ -21,6 +22,7 @@ class FillElevatedButton extends StatelessWidget {
   final TextStyle? textStyle;
   final double? width;
   final double? height;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +31,16 @@ class FillElevatedButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         elevation: 0,overlayColor: textColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        backgroundColor: backgroundColor ?? theme.primaryColor,
+        backgroundColor:loading?AppColor.grayColor: backgroundColor ?? theme.primaryColor,
         fixedSize: Size(
             Responsive.isDesktop() ? 500 : width ?? 80.width(), height ?? 50),
       ),
-      onPressed: onPressed,
-      child: Text(
+      onPressed:!loading? onPressed:null,
+      child:!loading? Text(
         title,
         style:
             textStyle ?? theme.textTheme.labelSmall!.apply(color:textColor?? Colors.white),
-      ),
+      ):const CupertinoActivityIndicator(color: Colors.white,),
     );
   }
 }

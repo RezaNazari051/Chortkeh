@@ -74,12 +74,12 @@ class PTextFormField extends StatelessWidget {
                             width: 1,
                             color: focusBorderColor ??
                                 theme.focusedBorder!.borderSide.color)),
-                    // enabledBorder: theme.enabledBorder!.copyWith(
-                    //     borderSide: BorderSide(
-                    //         width: 1,
-                    //         color: controller.text.isNotEmpty
-                    //             ? Colors.black
-                    //             : theme.enabledBorder!.borderSide.color)),
+                    enabledBorder: theme.enabledBorder!.copyWith(
+                        borderSide: BorderSide(
+                            width: 1,
+                            color: controller.text.isNotEmpty
+                                ? Colors.black
+                                : theme.enabledBorder!.borderSide.color)),
                     counterText: '',
                     hintText: hintText,
                     contentPadding: EdgeInsets.only(

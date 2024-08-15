@@ -40,3 +40,8 @@ class AddTransactionEvent extends TransactionFormEvent{
   List<Object?> get props => [transactionModel];
 
 }
+class ResetTransactionFormEvent extends TransactionFormEvent{
+  @override
+  List<Object?> get props => [];
+  
+}

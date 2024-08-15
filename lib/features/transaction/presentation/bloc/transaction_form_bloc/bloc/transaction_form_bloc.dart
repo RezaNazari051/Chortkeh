@@ -49,12 +49,13 @@ class TransactionFormBloc
     );
     on<AddTransactionEvent>((event, emit) async {
       try {
-        print('try');
+        emit(state.copyWith(newTransactionStatus: AddTransactionLoading()));
         final TransactionDataHelper dnHelper = locator<TransactionDataHelper>();
 
-        await dnHelper.insertCard(event.transactionModel);
+        await dnHelper.insertTransaction(event.transactionModel);
+        emit(state.copyWith(newTransactionStatus:AddTransactionCompleted() ));
       } catch (e) {
-        print("catch $e");
+        print(e.toString());
         emit(
           state.copyWith(
             newTransactionStatus: AddTransactionFailed(
@@ -63,6 +64,15 @@ class TransactionFormBloc
           ),
         );
       }
+    });
+    on<ResetTransactionFormEvent>((event, emit) {
+      emit(state.copyWith(
+        newChannelStatus: ChannelStatus(cardModel: null),
+        newCategoryStatus: CategoryStatus(category: null),
+        newDateStatus: DateStatus(date: null),
+        newTimeStatus: TimeStatus(time: null),
+        newTransactionStatus: AddTransactionInitial()
+      ));
     });
   }
 }

@@ -3,8 +3,8 @@ import 'package:chortkeh/config/theme/app_theme.dart';
 import 'package:chortkeh/core/bloc/text_field_on_change_cubit.dart/cubit/bank_cubit.dart';
 import 'package:chortkeh/core/operation/locator/locator.dart';
 import 'package:chortkeh/features/home/presentation/bloc/manage_cards_bloc/card_cubit.dart';
+import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/recent_transactions_bloc.dart';
 import 'package:chortkeh/features/home/presentation/bloc/touch_chart_section_callback/chart_section_cubit.dart';
-import 'package:chortkeh/features/intro/presentation/screens/splash_screen.dart';
 import 'package:chortkeh/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -31,6 +31,7 @@ void main() async{
       BlocProvider(create: (context) => ChartSectionCubit()),
       BlocProvider(create: (context) => BankCubit()),
       BlocProvider(create: (context) => CardCubit()),
+      BlocProvider(create: (context) => RecentTransactionsBloc()),
     ],
     child: const MyApp(),
   ));

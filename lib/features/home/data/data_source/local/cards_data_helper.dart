@@ -25,6 +25,12 @@ CardsDataHelper(this._box);
   Future<List<CardModel>> getCards()async{
     return  _box.values.toList();
   }
+
+  Future<CardModel> getCardWithId(final String cardId)async{
+
+   return _box.values.firstWhere((CardModel card) => card.id==cardId ,orElse: () => throw Exception('چنین کارتی وجود ندارد'),);
+  }
+  
   Future<void> updateCard(CardModel card)async{
       if(await checkCardIsExist(card)){
       // throw Exception('شماره کارت قبلا وجود دارد');

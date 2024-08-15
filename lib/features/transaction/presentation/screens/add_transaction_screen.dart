@@ -1,6 +1,7 @@
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:chortkeh/core/widgets/app_buttons.dart';
 import 'package:chortkeh/core/widgets/app_text_form_field.dart';
+import 'package:chortkeh/features/home/presentation/bloc/manage_cards_bloc/card_cubit.dart';
 import 'package:chortkeh/features/home/presentation/screens/home_screen.dart';
 import 'package:chortkeh/features/home/presentation/widgets/channel_list_bottom_sheet.dart';
 import 'package:chortkeh/features/peleh_peleh/presentation/blocs/cubit/cubit/change_tabbar_index_cubit.dart';
@@ -74,6 +75,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     state: tabState,
                     onTap: (index) {
                       context.read<ChangeTabbarIndexCubit>().changeIndex(index);
+                      context.read<TransactionFormBloc>().add(ResetTransactionFormEvent());
                     },
                   ),
                 ),
@@ -101,8 +103,12 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   }),
                 ),
                 BlocConsumer<TransactionFormBloc, TransactionFormState>(
+                  listenWhen: (previous, current) => previous.transactionStatus!=current.transactionStatus,
+                  // listenWhen: (previous, current) {
+                  //   return previous.transactionStatus != current.transactionStatus;
+                  // },
                   listener: (context, state) {
-                    if (state is AddTransactionFailed) {
+                    if (state.transactionStatus is AddTransactionFailed) {
                       final data =
                           state.transactionStatus as AddTransactionFailed;
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -119,7 +125,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           content: Text('تراکنش با موفقیت ثبت شد'),
                         ),
                       );
-                      Navigator.pop(context);
+                      // ignore: use_build_context_synchronously
+                      Future.delayed(const Duration(seconds: 2),() => Navigator.pop(context),).then((value) {
+                        context.read<CardCubit>().loadCards();
+                      },);
                     }
                   },
                   builder: (context, state) {
@@ -154,6 +163,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                     transactionModel: transactionModel));
                           }
                         },
+                        loading: state.transactionStatus is AddTransactionLoading,
                         title: tabState == 0 ? 'ثبت درآمد' : 'ثبت هزینه');
                   },
                 ),

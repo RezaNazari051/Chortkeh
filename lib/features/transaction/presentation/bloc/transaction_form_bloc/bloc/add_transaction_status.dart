@@ -1,4 +1,3 @@
-import 'package:chortkeh/features/transaction/data/models/transaction_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class AddTransactionStatus extends Equatable{}
@@ -12,10 +11,9 @@ class AddTransactionLoading extends AddTransactionStatus{
   List<Object?> get props => [];
 }
 class AddTransactionCompleted extends AddTransactionStatus{
-  final TransactionModel transactionModel;
-  AddTransactionCompleted({required this.transactionModel});
+  AddTransactionCompleted();
   @override
-  List<Object?> get props => [transactionModel];
+  List<Object?> get props => [];
 }
 class AddTransactionFailed extends AddTransactionStatus{
   final String error;

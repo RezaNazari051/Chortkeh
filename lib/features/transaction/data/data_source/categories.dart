@@ -2,6 +2,8 @@ import 'package:chortkeh/core/utils/constants.dart';
 import 'package:chortkeh/features/transaction/data/models/transaction_category_model.dart';
 import 'package:flutter/material.dart';
 
+import '../models/transaction_model.dart';
+
  List<CategoryModel> withdrawlTransactionCategory = [
   CategoryModel(
       id: '0',
@@ -62,3 +64,27 @@ List<CategoryModel> depositTransactionCatefories = [
       iconPath: '$categoryIcon/ic_money.svg',
       backgroundColor: const Color(0xffDCF1DB)),
 ];
+
+CategoryModel getCategoryById(String categoryId, TransactionType type) {
+  if (type == TransactionType.deposit) {
+    return depositTransactionCatefories.firstWhere(
+      (category) => category.id == categoryId,
+      orElse: () => CategoryModel(
+        id: 'default',
+        name: 'Unknown',
+        iconPath: 'assets/default_icon.svg',
+        backgroundColor: Colors.grey,
+      ),
+    );
+  } else {
+    return withdrawlTransactionCategory.firstWhere(
+      (category) => category.id == categoryId,
+      orElse: () => CategoryModel(
+        id: 'default',
+        name: 'Unknown',
+        iconPath: 'assets/default_icon.svg',
+        backgroundColor: Colors.grey,
+      ),
+    );
+  }
+}

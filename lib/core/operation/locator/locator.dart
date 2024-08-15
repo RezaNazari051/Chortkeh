@@ -29,6 +29,9 @@ Future<void>initHive()async{
     Hive.registerAdapter(CardModelAdapter());
 
     Hive.registerAdapter(TransactionModelAdapter());
+    
+    Hive.registerAdapter(TransactionTypeAdapter());
+    
 
   final cardBox= await Hive.openBox<CardModel>('card');
   final transactionBox=await Hive.openBox<TransactionModel>('transaction');

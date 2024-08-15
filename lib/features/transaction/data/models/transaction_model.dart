@@ -1,8 +1,11 @@
 
 import 'package:hive_flutter/hive_flutter.dart';
 part 'transaction_model.g.dart';
+@HiveType(typeId: 2)
 enum TransactionType{
+  @HiveField(0)
   deposit,
+  @HiveField(1)
   withdraw
 }
 
