@@ -1,8 +1,12 @@
 import 'package:chortkeh/config/theme/app_color.dart';
+import 'package:chortkeh/features/transaction/data/data_source/local/transaction_detail.dart';
+import 'package:chortkeh/features/transaction/data/models/transaction_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 
+import '../../../features/home/presentation/bloc/recent_transactions_bloc/recent_transactions_bloc.dart';
 import '../../screens/main_wrapper.dart';
 import '../../utils/constants.dart';
 import '../app_buttons.dart';
@@ -10,12 +14,16 @@ import '../app_buttons.dart';
 class DeleteTransactionDialog extends StatelessWidget {
   const DeleteTransactionDialog({
     super.key,
+    required this.transactionDetail,
   });
 
+  final TransactionDetail transactionDetail;
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme=Theme.of(context).textTheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    bool undoPressed = false; // پرچم برای کنترل کلیک برگردون
+
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       actionsPadding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -30,7 +38,6 @@ class DeleteTransactionDialog extends StatelessWidget {
                   Navigator.pop(context);
                 },
                 title: 'انصراف',
-                // width: 35.width(),
               ),
             ),
             const Gap(16),
@@ -38,45 +45,62 @@ class DeleteTransactionDialog extends StatelessWidget {
               child: AppOutlineButton(
                 width: 0,
                 onPressed: () {
-                  Navigator.popUntil(context,
-                      (route) => route.settings.name == MainWrapper.routeName);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    
-                    SnackBar(
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: const Color(0xff323232),
-                      duration: const Duration(seconds: 3),
-                      content: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                           Text('تراکنش حذف شد.',style: textTheme.displaySmall!.apply(color: Colors.white)),
-                          InkWell(
-                            borderRadius: BorderRadius.circular(10),
-                            onTap: () {
-                              
-                            },
-                            child: Container(
-                              padding:
-                              const EdgeInsets.all(5),
-                              child: Row(
+                  // نمایش اسنک‌بار و منتظر ماندن برای بسته شدن آن
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                        SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: const Color(0xff323232),
+                          duration: const Duration(seconds: 3),
+                          content: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('تراکنش حذف شد.',
+                                  style: textTheme.displaySmall!
+                                      .apply(color: Colors.white)),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(10),
+                                onTap: () {
+                                  // کاربر برگردون را زد
+                                  undoPressed = true;
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       SvgPicture.asset('$iconUrl/ic_undo.svg'),
                                       const Gap(5),
-                                       Text('برگردون',style: textTheme.displaySmall!.apply(color: Colors.white))
-                              
+                                      Text('برگردون',
+                                          style: textTheme.displaySmall!
+                                              .apply(color: Colors.white))
                                     ],
                                   ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                      .closed
+                      .then((_) {
+                    // چک کردن اینکه دکمه برگردون زده نشده باشد
+                    if (!undoPressed && context.mounted) {
+                      // اگر برگردون زده نشده بود، حذف تراکنش انجام شود
+                      context.read<RecentTransactionsBloc>().add(
+                          DeleteTransactionEvent(
+                              transaction: transactionDetail));
+                      context.read<RecentTransactionsBloc>().add(
+                          GetAllTransactionsEvent(
+                              type: transactionDetail.transaction.type));
+                    }
+                  });
+
+                  Navigator.popUntil(context,
+                      (route) => route.settings.name == MainWrapper.routeName);
                 },
                 title: 'حذف',
                 borderColor: AppColor.redColor,
-                // width: 35.width(),
               ),
             ),
           ],
@@ -85,26 +109,21 @@ class DeleteTransactionDialog extends StatelessWidget {
       contentPadding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
       titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       title: Row(
-        // mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          IconButton( 
+          IconButton(
               onPressed: () {
                 if (context.mounted) {
                   Navigator.pop(context);
                 }
               },
-              icon:
-               SvgPicture.asset('$iconUrl/ic_close_circle.svg')
-              )
-              ,
-          const Spacer(flex: 1,),
+              icon: SvgPicture.asset('$iconUrl/ic_close_circle.svg')),
+          const Spacer(),
           Text(
-                      'حذف تراکنش',
-                      style: textTheme.labelMedium,
-                    ),
+            'حذف تراکنش',
+            style: textTheme.labelMedium,
+          ),
           const Spacer(),
           const Gap(24),
-
         ],
       ),
       content: SizedBox(

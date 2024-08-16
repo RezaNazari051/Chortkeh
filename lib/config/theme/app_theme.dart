@@ -106,6 +106,14 @@ class AppTheme {
             borderSide:
                 const BorderSide(color: AppColor.primaryColor, width: 1)),
       ),
+      popupMenuTheme: PopupMenuThemeData(
+        labelTextStyle: WidgetStatePropertyAll(
+          TextStyle(
+              fontFamily: 'IranYekan',
+              color: Colors.black,
+              fontSize: Responsive.isMobile() ? 12 : 18),
+        ),
+      ),
     );
   }
 }

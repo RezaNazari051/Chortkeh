@@ -17,7 +17,7 @@ class TransactionDataHelper {
     final CardsDataHelper cardHelper = locator<CardsDataHelper>();
     final CardModel card = await cardHelper.getCardWithId(transaction.cardId);
 
-    if (await _checkTransacionIsExist(transaction)) {
+    if (await _checkTransacionIsExist(transaction.id)) {
       throw Exception('این تراکنش از قبل وجود دارد');
     }
 
@@ -38,7 +38,7 @@ class TransactionDataHelper {
       } catch (e) {
         throw 'خطا در زمان برداشت: ${e.toString()}';
       }
-    } else {
+    } else if (transaction.type == TransactionType.deposit) {
       // در اینجا فقط واریز انجام می‌شود
       final CardModel updatedCard =
           card.copyWith(balance: card.balance + transaction.amount);
@@ -52,19 +52,20 @@ class TransactionDataHelper {
   }
 
   List<TransactionModel> getTransactions({TransactionType? type}) {
-    if(type!=null){
+    if (type != null) {
       return _box.values.where((element) => element.type == type).toList();
     }
     return _box.values.toList();
   }
 
-  Future<bool> _checkTransacionIsExist(TransactionModel transaction) async {
+  Future<bool> _checkTransacionIsExist(String? id) async {
     final transactions = _box.values.toList();
 
-    return transactions.any((element) => element.id == transaction.id);
+    return transactions.any((element) => element.id == id);
   }
 
-  Future<List<TransactionDetail>> getTransactionDetails(TransactionType type) async {
+  Future<List<TransactionDetail>> getTransactionDetails(
+      TransactionType type) async {
     final List<TransactionModel> transactions = getTransactions(type: type);
     final List<TransactionDetail> transactionDetails = [];
 
@@ -80,5 +81,27 @@ class TransactionDataHelper {
           card: card, transaction: transaction, category: category));
     }
     return transactionDetails;
+  }
+
+  Future<void> deleteTransaction(TransactionDetail detail) async {
+    if (await _checkTransacionIsExist(detail.transaction.id)) {
+      final CardsDataHelper cardHelper = locator<CardsDataHelper>();
+      final CardModel card =
+          await cardHelper.getCardWithId(detail.transaction.cardId);
+
+      if (detail.transaction.type == TransactionType.deposit) {
+        final CardModel updatedCard =
+            card.copyWith(balance:card.balance- detail.transaction.amount);
+        cardHelper.updateCard(updatedCard);
+      }else{
+         final CardModel updatedCard =
+            card.copyWith(balance:card.balance+ detail.transaction.amount);
+          cardHelper.updateCard(updatedCard);  
+      }
+      await _box.delete(detail.transaction.id);
+
+    } else {
+      throw 'چنین تراکنشی وجود ندارد';
+    }
   }
 }

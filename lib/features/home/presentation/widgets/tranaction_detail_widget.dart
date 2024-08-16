@@ -1,5 +1,5 @@
-import 'package:chortkeh/core/screens/main_wrapper.dart';
 import 'package:chortkeh/core/utils/extensions.dart';
+import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/get_transaction_status.dart';
 import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/recent_transactions_bloc.dart';
 import 'package:chortkeh/features/transaction/data/data_source/local/transaction_detail.dart';
 import 'package:flutter/material.dart';
@@ -18,15 +18,16 @@ import '../screens/home_screen.dart';
 class TransactionDetailWidget extends StatelessWidget {
   const TransactionDetailWidget({
     super.key,
-    required this.recentActivities,
-    required this.index,
+    required this.index, required this.state,
   });
 
-  final List<TransactionDetail> recentActivities;
+  final GetTransactionCompeted state; 
   final int index;
 
   @override
   Widget build(BuildContext context) {
+  final List<TransactionDetail> recentActivities=state.transactions;
+
     final TextTheme textTheme = Theme.of(context).textTheme;
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -43,7 +44,7 @@ class TransactionDetailWidget extends StatelessWidget {
           },
           onTap: () {
             showTransactionDetailBottomSheet(
-                context, recentActivities, index);
+                context, recentActivities[index],state.type);
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -99,79 +100,84 @@ class TransactionDetailWidget extends StatelessWidget {
 class TranactionDetailBottomSheet extends StatelessWidget {
   const TranactionDetailBottomSheet({
     super.key,
-    required this.recentActivity,
+    required this.transactionDetail, required this.type,
   });
 
-  final TransactionDetail recentActivity;
+  final TransactionDetail transactionDetail;
+  final TransactionType type;
 
   @override
   Widget build(BuildContext context) {
+    final isWithdraw=type==TransactionType.withdraw;
     final TextTheme textTheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(width: double.infinity),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            width: 60,
-            height: 5,
-            decoration: BoxDecoration(
-                color: AppColor.cardBorderGrayColor,
-                borderRadius: BorderRadius.circular(28)),
-          ),
-          const Gap(20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-              Text('جزئیات تراکنش', style: textTheme.labelSmall),
-              Expanded(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SvgPicture.asset('$iconUrl/ic_edit.svg'),
-                  const Gap(20),
-                  IconButton(
-                    onPressed: () {
-                      showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (context) {
-                            return const DeleteTransactionDialog();
-                          });
-                    },
-                    icon: SvgPicture.asset('$iconUrl/ic_trash.svg'),
-                  ),
-                ],
-              ))
-            ],
-          ),
-          const Gap(16),
-          TranactionDetailBottomSheetRowData(
-              title: 'دسته‌بندی پرداخت', detail: recentActivity.category.name),
-          TranactionDetailBottomSheetRowData(
-              title: 'مبلغ پرداخت',
-              detail:
-                  '${recentActivity.transaction.amount.toStringAsFixed(0).toCurrencyFormat()} تومان'),
-          TranactionDetailBottomSheetRowData(
-              title: 'برداشت از', detail: recentActivity.card.cardName),
-          TranactionDetailBottomSheetRowData(
-            title: 'تاریخ و ساعت',
-            detail: formatJalali(recentActivity.transaction.dateTime),
-            marginBottom: 16,
-          ),
-          FillElevatedButton(
-              backgroundColor: const Color(0xffEBEFFB),
-              textStyle:
-                  textTheme.labelSmall!.apply(color: AppColor.primaryColor),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              title: 'بازگشت'),
-          const Gap(16)
-        ],
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(width: double.infinity),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              width: 60,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: AppColor.cardBorderGrayColor,
+                  borderRadius: BorderRadius.circular(28)),
+            ),
+            const Gap(20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Spacer(),
+                Text('جزئیات تراکنش', style: textTheme.labelSmall),
+                Expanded(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SvgPicture.asset('$iconUrl/ic_edit.svg'),
+                    const Gap(20),
+                    IconButton(
+                      onPressed: () {
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) {
+                              return  DeleteTransactionDialog(transactionDetail:transactionDetail ,);
+                            });
+                      },
+                      icon: InkWell(
+                        child: SvgPicture.asset('$iconUrl/ic_trash.svg')),
+                    ),
+                  ],
+                ))
+              ],
+            ),
+            const Gap(16),
+            TranactionDetailBottomSheetRowData(
+                title:isWithdraw? 'دسته‌بندی پرداخت':'دسته‌بندی واریز', detail: transactionDetail.category.name),
+            TranactionDetailBottomSheetRowData(
+                title:type==TransactionType.withdraw? 'مبلغ پرداخت':'مبلغ واریزی',
+                detail:
+                    '${transactionDetail.transaction.amount.toStringAsFixed(0).toCurrencyFormat()} تومان'),
+            TranactionDetailBottomSheetRowData(
+                title:isWithdraw? 'برداشت از':'واریز به', detail: transactionDetail.card.cardName),
+            TranactionDetailBottomSheetRowData(
+              title: 'تاریخ و ساعت',
+              detail: formatJalali(transactionDetail.transaction.dateTime),
+              marginBottom: 16,
+            ),
+            FillElevatedButton(
+                backgroundColor: const Color(0xffEBEFFB),
+                textStyle:
+                    textTheme.labelSmall!.apply(color: AppColor.primaryColor),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                title: 'بازگشت'),
+            const Gap(16)
+          ],
+        ),
       ),
     );
   }
@@ -210,12 +216,13 @@ class TranactionDetailBottomSheetRowData extends StatelessWidget {
 }
 
 Future<dynamic> showTransactionDetailBottomSheet(
-    BuildContext context, List<TransactionDetail> recentActivities, int index) {
+    BuildContext context, TransactionDetail detail, TransactionType type) {
   return showModalBottomSheet(
     context: context,
     builder: (context) {
-      final recentActivity = recentActivities[index];
-      return TranactionDetailBottomSheet(recentActivity: recentActivity);
+      // final detail = state.recentActivities[index];
+      // final TransactionDetail detail=state.transactions[index];
+      return TranactionDetailBottomSheet(transactionDetail:detail,type: type,);
     },
   );
 }

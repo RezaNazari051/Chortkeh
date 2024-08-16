@@ -1,4 +1,5 @@
 import 'package:chortkeh/core/operation/locator/locator.dart';
+import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/delete_transaction_status.dart';
 import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/get_transaction_status.dart';
 import 'package:chortkeh/features/transaction/data/data_source/local/transaction_data_helper.dart';
 import 'package:chortkeh/features/transaction/data/data_source/local/transaction_detail.dart';
@@ -15,13 +16,14 @@ class RecentTransactionsBloc
       : super(
           RecentTransactionsState(
             getTransactionStatus: GetTransactionInitial(),
+            deleteTransactionStatus: DeleteTransactionInitial()
           ),
         ) {
     on<GetAllTransactionsEvent>((event, emit) async {
       try {
               emit(
         state.copyWith(
-          newgetTransactionStatus: GetTransactionLoading(),
+          newGetTransactionStatus: GetTransactionLoading(),
         ),
       );
         final TransactionDataHelper dataHelper =
@@ -30,19 +32,32 @@ class RecentTransactionsBloc
             await dataHelper.getTransactionDetails(event.type);
         emit(
           state.copyWith(
-            newgetTransactionStatus:
-                GetTransactionCompeted(transactions),
+            newGetTransactionStatus:
+                GetTransactionCompeted(transactions,event.type),
           ),
         );
       } catch (e) {
         emit(
           state.copyWith(
-            newgetTransactionStatus: GetTransactionFailure(
+            newGetTransactionStatus: GetTransactionFailure(
               e.toString(),
             ),
           ),
         );
       }
     });
+
+    on<DeleteTransactionEvent>((event, emit)async {
+      final TransactionDataHelper dataHelper =locator<TransactionDataHelper>();
+      try{
+        emit(state.copyWith(newDeleteTransactionStatus: DeleteTransactionLoading()));
+        dataHelper.deleteTransaction(event.transaction);
+        emit(state.copyWith(newDeleteTransactionStatus: DeleteTransactionComplete()));
+      }
+      catch (e){
+        emit(state.copyWith(newDeleteTransactionStatus: DeleteTransactionFailed(error: e.toString())));
+        
+      }
+    },);
   }
 }

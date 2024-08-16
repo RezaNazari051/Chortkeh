@@ -8,5 +8,12 @@ final class GetAllTransactionsEvent extends RecentTransactionsEvent {
 
   GetAllTransactionsEvent({required this.type});
   @override
+  List<Object?> get props => [type];
+}
+
+final class DeleteTransactionEvent extends RecentTransactionsEvent{
+  final TransactionDetail transaction;
+  DeleteTransactionEvent({required this.transaction});
+  @override
   List<Object?> get props => [];
 }

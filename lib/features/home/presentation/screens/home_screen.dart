@@ -32,7 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CardCubit>().loadCards();
-      context.read<RecentTransactionsBloc>().add(GetAllTransactionsEvent(type: TransactionType.withdraw));
+      context
+          .read<RecentTransactionsBloc>()
+          .add(GetAllTransactionsEvent(type: TransactionType.withdraw));
     });
     // _cardsFuture=dbHelper.getCards();
     super.initState();
@@ -53,49 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-
-    final List<RecentActivities> recentActivities = [
-      RecentActivities(
-          category: 'ماشین',
-          bankCard: 'کارت پاسارگاد',
-          color: const Color(0xffFCF8D2),
-          date: DateTime.now(),
-          price: 3750000,
-          value: 25,
-          icon: '$categoryIcon/ic_car.svg'),
-      RecentActivities(
-          category: 'سلامتی',
-          bankCard: 'کارت پاسارگاد',
-          color: const Color(0xffDCF1DB),
-          date: DateTime.now(),
-          price: 650000,
-          value: 10,
-          icon: '$categoryIcon/ic_hospital.svg'),
-      RecentActivities(
-          category: 'خوردنی',
-          bankCard: 'کارت پاسارگاد',
-          color: const Color(0xffFCE6D4),
-          date: DateTime.now(),
-          price: 900000,
-          value: 13,
-          icon: '$categoryIcon/ic_cake.svg'),
-      RecentActivities(
-          category: 'خریدنی',
-          bankCard: 'کارت پاسارگاد',
-          color: const Color(0xffDAE2F0),
-          date: DateTime.now(),
-          price: 550000,
-          value: 11,
-          icon: '$categoryIcon/ic_bag.svg'),
-      RecentActivities(
-          category: 'خوش گذرونی',
-          bankCard: 'کارت پاسارگاد',
-          color: const Color(0xffECDEED),
-          date: DateTime.now(),
-          price: 3250000,
-          value: 45,
-          icon: '$categoryIcon/ic_headphone.svg'),
-    ];
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -161,44 +120,70 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text('فعالیت‌های اخیر مهرماه',
                         style: textTheme.labelMedium),
                     const Spacer(),
-                    InkWell(
-                        onTap: () {},
-                        child: SvgPicture.asset(
-                          '$iconUrl/ic_sort.svg',
-                          fit: BoxFit.cover,
-                          width: constraints.maxWidth * 0.045,
-                        )),
+                    PopupMenuButton(
+                        offset: const Offset(0, 30),
+                        child: SvgPicture.asset('$iconUrl/ic_sort.svg'),
+                        itemBuilder: (context) {
+                          return const [
+                            PopupMenuItem(
+                                child: Text(
+                              'جدیدترین فعالیت',
+                            )),
+                            PopupMenuItem(child: Text('قدیمی‌ترین فعالیت')),
+                            PopupMenuItem(child: Text('بیشترین مقدار')),
+                            PopupMenuItem(child: Text('کمترین مقدار')),
+                          ];
+                        }),
                     const Gap(20),
-                    InkWell(
-                      onTap: () {},
+                    PopupMenuButton(
+                      offset: const Offset(0, 30),
                       child: SvgPicture.asset(
                         '$iconUrl/ic_filter.svg',
                         fit: BoxFit.cover,
                         width: constraints.maxWidth * 0.045,
                       ),
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            child: const Text('دریافتی'),
+                            onTap: () => context
+                                .read<RecentTransactionsBloc>()
+                                .add(GetAllTransactionsEvent(
+                                    type: TransactionType.deposit)),
+                          ),
+                          PopupMenuItem(
+                              child: const Text('پرداختی'),
+                              onTap: () => context
+                                  .read<RecentTransactionsBloc>()
+                                  .add(GetAllTransactionsEvent(
+                                      type: TransactionType.withdraw))),
+                        ];
+                      },
                     ),
                   ],
                 ),
               ),
 
-              const SliverGap(20),
+              // const SliverGap(0),
 
               // RecentActivitiesChartWidget(constraints: constraints),
 
-              const SliverGap(12), 
+              const SliverGap(12),
               BlocBuilder<RecentTransactionsBloc, RecentTransactionsState>(
                 builder: (context, state) {
                   if (state.getTransactionStatus is GetTransactionLoading) {
-                    return const SliverToBoxAdapter(child: CupertinoActivityIndicator());
-                  }  
-                  else if (state.getTransactionStatus is GetTransactionCompeted) {
-                    final completedState=state.getTransactionStatus as GetTransactionCompeted;
-                    print(completedState.transactions.length);
+                    return const SliverToBoxAdapter(
+                        child: CupertinoActivityIndicator());
+                  } else if (state.getTransactionStatus
+                      is GetTransactionCompeted) {
+                    final completedState =
+                        state.getTransactionStatus as GetTransactionCompeted;
                     return SliverList.builder(
                       itemCount: completedState.transactions.length,
                       itemBuilder: (context, index) {
                         return TransactionDetailWidget(
-                            recentActivities: completedState.transactions, index: index);
+                          state: completedState,
+                            index: index);
                       },
                     );
                   }

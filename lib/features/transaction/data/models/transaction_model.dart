@@ -6,7 +6,7 @@ enum TransactionType{
   @HiveField(0)
   deposit,
   @HiveField(1)
-  withdraw
+  withdraw,
 }
 
 @HiveType(typeId: 1)
