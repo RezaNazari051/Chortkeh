@@ -51,8 +51,10 @@ class RecentTransactionsBloc
       final TransactionDataHelper dataHelper =locator<TransactionDataHelper>();
       try{
         emit(state.copyWith(newDeleteTransactionStatus: DeleteTransactionLoading()));
-        dataHelper.deleteTransaction(event.transaction);
-        emit(state.copyWith(newDeleteTransactionStatus: DeleteTransactionComplete()));
+        await dataHelper.deleteTransaction(event.transaction);
+        
+        add(GetAllTransactionsEvent(type: event.transaction.transaction.type));
+        emit(state.copyWith(newDeleteTransactionStatus: DeleteTransactionComplete(transactionType: event.transaction.transaction.type)));
       }
       catch (e){
         emit(state.copyWith(newDeleteTransactionStatus: DeleteTransactionFailed(error: e.toString())));

@@ -1,5 +1,6 @@
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:chortkeh/features/home/presentation/bloc/manage_cards_bloc/card_cubit.dart';
+import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/delete_transaction_status.dart';
 import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/get_transaction_status.dart';
 import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/recent_transactions_bloc.dart';
 import 'package:chortkeh/features/transaction/data/models/transaction_model.dart';
@@ -17,6 +18,7 @@ import '../widgets/features_cards_list.dart';
 import '../widgets/tranaction_detail_widget.dart';
 
 class HomeScreen extends StatefulWidget {
+
   const HomeScreen({super.key});
 
   @override
@@ -24,6 +26,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   @override
   void initState() {
     // final CardHelper dbHelper=locator<CardHelper>();
@@ -169,7 +172,17 @@ class _HomeScreenState extends State<HomeScreen> {
               // RecentActivitiesChartWidget(constraints: constraints),
 
               const SliverGap(12),
-              BlocBuilder<RecentTransactionsBloc, RecentTransactionsState>(
+              BlocConsumer<RecentTransactionsBloc, RecentTransactionsState>(
+                listenWhen: (previous, current) => previous.getTransactionStatus!=current.getTransactionStatus,
+                listener: (context, state) {
+                  if(state.getTransactionStatus is GetTransactionCompeted){
+                    print('reload');
+                    context.read<CardCubit>().loadCards();
+                  }
+                },
+                buildWhen: (previous, current) =>
+                  previous.getTransactionStatus != current.getTransactionStatus,
+                
                 builder: (context, state) {
                   if (state.getTransactionStatus is GetTransactionLoading) {
                     return const SliverToBoxAdapter(
@@ -182,8 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: completedState.transactions.length,
                       itemBuilder: (context, index) {
                         return TransactionDetailWidget(
-                          state: completedState,
-                            index: index);
+                            state: completedState, index: index);
                       },
                     );
                   }

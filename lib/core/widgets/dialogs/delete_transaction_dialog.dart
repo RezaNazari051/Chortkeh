@@ -1,8 +1,6 @@
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:chortkeh/features/transaction/data/data_source/local/transaction_detail.dart';
-import 'package:chortkeh/features/transaction/data/models/transaction_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 
@@ -14,13 +12,15 @@ import '../app_buttons.dart';
 class DeleteTransactionDialog extends StatelessWidget {
   const DeleteTransactionDialog({
     super.key,
-    required this.transactionDetail,
+    required this.transactionDetail, required this.bloc,
   });
 
   final TransactionDetail transactionDetail;
+  final RecentTransactionsBloc bloc;
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final TextTheme textTheme = Theme.of(context).textTheme;
     bool undoPressed = false; // پرچم برای کنترل کلیک برگردون
 
@@ -46,7 +46,7 @@ class DeleteTransactionDialog extends StatelessWidget {
                 width: 0,
                 onPressed: () {
                   // نمایش اسنک‌بار و منتظر ماندن برای بسته شدن آن
-                  ScaffoldMessenger.of(context)
+                  scaffoldMessenger
                       .showSnackBar(
                         SnackBar(
                           behavior: SnackBarBehavior.floating,
@@ -63,6 +63,7 @@ class DeleteTransactionDialog extends StatelessWidget {
                                 onTap: () {
                                   // کاربر برگردون را زد
                                   undoPressed = true;
+                                  scaffoldMessenger.clearSnackBars();
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(5),
@@ -85,20 +86,19 @@ class DeleteTransactionDialog extends StatelessWidget {
                       .closed
                       .then((_) {
                     // چک کردن اینکه دکمه برگردون زده نشده باشد
-                    if (!undoPressed && context.mounted) {
+                    if (!undoPressed ) {
                       // اگر برگردون زده نشده بود، حذف تراکنش انجام شود
-                      context.read<RecentTransactionsBloc>().add(
+                     bloc.add(
                           DeleteTransactionEvent(
                               transaction: transactionDetail));
-                      context.read<RecentTransactionsBloc>().add(
-                          GetAllTransactionsEvent(
-                              type: transactionDetail.transaction.type));
+                              
+           
                     }
                   });
 
                   Navigator.popUntil(context,
                       (route) => route.settings.name == MainWrapper.routeName);
-                },
+                }, 
                 title: 'حذف',
                 borderColor: AppColor.redColor,
               ),

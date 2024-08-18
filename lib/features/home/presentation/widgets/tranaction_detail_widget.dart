@@ -100,11 +100,12 @@ class TransactionDetailWidget extends StatelessWidget {
 class TranactionDetailBottomSheet extends StatelessWidget {
   const TranactionDetailBottomSheet({
     super.key,
-    required this.transactionDetail, required this.type,
+    required this.transactionDetail, required this.type, required this.bloc,
   });
 
   final TransactionDetail transactionDetail;
   final TransactionType type;
+  final RecentTransactionsBloc bloc;
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +144,7 @@ class TranactionDetailBottomSheet extends StatelessWidget {
                             barrierDismissible: false,
                             context: context,
                             builder: (context) {
-                              return  DeleteTransactionDialog(transactionDetail:transactionDetail ,);
+                              return  DeleteTransactionDialog(transactionDetail:transactionDetail ,bloc: bloc);
                             });
                       },
                       icon: InkWell(
@@ -215,14 +216,12 @@ class TranactionDetailBottomSheetRowData extends StatelessWidget {
   }
 }
 
-Future<dynamic> showTransactionDetailBottomSheet(
+Future<void> showTransactionDetailBottomSheet(
     BuildContext context, TransactionDetail detail, TransactionType type) {
   return showModalBottomSheet(
     context: context,
     builder: (context) {
-      // final detail = state.recentActivities[index];
-      // final TransactionDetail detail=state.transactions[index];
-      return TranactionDetailBottomSheet(transactionDetail:detail,type: type,);
+      return TranactionDetailBottomSheet(transactionDetail:detail,type: type,bloc: context.read<RecentTransactionsBloc>(),);
     },
   );
 }

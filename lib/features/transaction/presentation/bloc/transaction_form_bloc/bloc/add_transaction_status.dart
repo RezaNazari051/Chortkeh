@@ -11,7 +11,6 @@ class AddTransactionLoading extends AddTransactionStatus{
   List<Object?> get props => [];
 }
 class AddTransactionCompleted extends AddTransactionStatus{
-  AddTransactionCompleted();
   @override
   List<Object?> get props => [];
 }

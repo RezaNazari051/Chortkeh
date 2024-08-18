@@ -1,7 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:chortkeh/core/widgets/app_buttons.dart';
 import 'package:chortkeh/core/widgets/app_text_form_field.dart';
 import 'package:chortkeh/features/home/presentation/bloc/manage_cards_bloc/card_cubit.dart';
+import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/recent_transactions_bloc.dart';
 import 'package:chortkeh/features/home/presentation/screens/home_screen.dart';
 import 'package:chortkeh/features/home/presentation/widgets/channel_list_bottom_sheet.dart';
 import 'package:chortkeh/features/peleh_peleh/presentation/blocs/cubit/cubit/change_tabbar_index_cubit.dart';
@@ -119,15 +122,16 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       );
                     }
                     else if(state.transactionStatus is AddTransactionCompleted){
+                      
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           behavior: SnackBarBehavior.floating,
                           content: Text('تراکنش با موفقیت ثبت شد'),
                         ),
                       );
-                      // ignore: use_build_context_synchronously
                       Future.delayed(const Duration(seconds: 2),() => Navigator.pop(context),).then((value) {
-                        context.read<CardCubit>().loadCards();
+                        // context.read<CardCubit>().loadCards();
+                        context.read<RecentTransactionsBloc>().add(GetAllTransactionsEvent(type: TransactionType.withdraw));
                       },);
                     }
                   },
