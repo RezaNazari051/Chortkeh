@@ -283,7 +283,7 @@ class ActivePelehScreen extends StatelessWidget {
                           ),
                           const Gap(8),
                           Text(
-                              onstraints.maxHeight.toString(),
+                              peleh.name,
                               style: textTheme.labelSmall),
                           const Gap(3),
                           Text(

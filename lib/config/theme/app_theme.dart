@@ -74,7 +74,14 @@ class AppTheme {
               fontFamily: 'IranYekan',
               fontSize: Responsive.isMobile() ? 12 : 18)),
 
-      ///? Outline button
+      appBarTheme: AppBarTheme(
+        titleTextStyle: TextStyle(
+            fontFamily: 'IranYekan',
+            fontSize: Responsive.isMobile() ? 16 : 22,
+            color: Colors.black
+          ),
+      ),
+      //? Outline button
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
           padding: const WidgetStatePropertyAll(

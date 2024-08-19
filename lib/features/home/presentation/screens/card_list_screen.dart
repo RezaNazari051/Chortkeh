@@ -17,13 +17,19 @@ class CardListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-
     final TextTheme textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text('کانال‌های ورودی', style: textTheme.bodyMedium),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: SvgPicture.asset(
+            '$iconUrl/ic_arrow_right.svg',
+          ),
+        ),
       ),
       body: Stack(
         alignment: Alignment.center,
@@ -32,10 +38,9 @@ class CardListScreen extends StatelessWidget {
             final double horizontalPadding = consraints.maxWidth * 0.05;
             return BlocBuilder<CardCubit, CardState>(
               builder: (context, state) {
-            
                 return CustomScrollView(
                   slivers: [
-                    state is GetCardsCompleted && state.cards.length>1
+                    state is GetCardsCompleted && state.cards.length > 1
                         ? SliverPadding(
                             padding: EdgeInsets.fromLTRB(
                                 horizontalPadding, 24, horizontalPadding, 130),
@@ -45,65 +50,76 @@ class CardListScreen extends StatelessWidget {
                               itemCount: state.cards.length,
                               itemBuilder: (context, index) {
                                 final card = state.cards[index];
-                                return card.cardNumber!='0'? DecoratedBox(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                          color: AppColor.cardBorderGrayColor)),
-                                  child: ListTile(
-                                    trailing: const Icon(Icons.arrow_forward_ios_rounded,color: AppColor.grayColor,size: 20),
-                                    minLeadingWidth: 32,
-                                    leading: SvgPicture.asset(
-                                      '$cardIcon/${card.iconPath}',
-                                      fit: BoxFit.cover,
-                                    ),
-                                    title: Text(
-                                      card.cardName,
-                                      style: textTheme.bodyMedium,
-                                    ),
-                                    subtitle: Text(
-                                      'موجودی: ${card.balance.toStringAsFixed(0).toCurrencyFormat()} تومان',
-                                      style: textTheme.bodySmall!
-                                          .apply(color: AppColor.grayColor),
-                                    ),
-                                    onTap: () {
-                                      Navigator.pushNamed(context, AddCardScreen.routeName,arguments: card);
-                                    },
-                                  ),
-                                ):const SizedBox.shrink();
+                                return card.cardNumber != '0'
+                                    ? DecoratedBox(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border: Border.all(
+                                                color: AppColor
+                                                    .cardBorderGrayColor)),
+                                        child: ListTile(
+                                          trailing: const Icon(
+                                              Icons.arrow_forward_ios_rounded,
+                                              color: AppColor.grayColor,
+                                              size: 20),
+                                          minLeadingWidth: 32,
+                                          leading: SvgPicture.asset(
+                                            '$cardIcon/${card.iconPath}',
+                                            fit: BoxFit.cover,
+                                          ),
+                                          title: Text(
+                                            card.cardName,
+                                            style: textTheme.bodyMedium,
+                                          ),
+                                          subtitle: Text(
+                                            'موجودی: ${card.balance.toStringAsFixed(0).toCurrencyFormat()} تومان',
+                                            style: textTheme.bodySmall!.apply(
+                                                color: AppColor.grayColor),
+                                          ),
+                                          onTap: () {
+                                            Navigator.pushNamed(context,
+                                                AddCardScreen.routeName,
+                                                arguments: card);
+                                          },
+                                        ),
+                                      )
+                                    : const SizedBox.shrink();
                               },
                             ),
                           )
-                        : state is GetCardsCompleted && state.cards.length<=1?
-                        SliverList(
-                            delegate: SliverChildListDelegate(
-                              [
-                                Gap(
-                                  30.height(context),
-                                ),
-                                Column(
-                                  children: [
-                                    SvgPicture.asset(
-                                        '$imageUrl/img_not_found_channel.svg'),
-                                    const Gap(24),
-                                    Text(
-                                      'هنوز کانالی ثبت نکردی',
-                                      style: textTheme.bodySmall!
-                                          .apply(color: AppColor.grayColor),
+                        : state is GetCardsCompleted && state.cards.length <= 1
+                            ? SliverList(
+                                delegate: SliverChildListDelegate(
+                                  [
+                                    Gap(
+                                      30.height(context),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 90, top: 10.height(context)),
-                                      child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: SvgPicture.asset(
-                                              '$imageUrl/img_hint_arrow.svg')),
-                                    )
+                                    Column(
+                                      children: [
+                                        SvgPicture.asset(
+                                            '$imageUrl/img_not_found_channel.svg'),
+                                        const Gap(24),
+                                        Text(
+                                          'هنوز کانالی ثبت نکردی',
+                                          style: textTheme.bodySmall!
+                                              .apply(color: AppColor.grayColor),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 90,
+                                              top: 10.height(context)),
+                                          child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: SvgPicture.asset(
+                                                  '$imageUrl/img_hint_arrow.svg')),
+                                        )
+                                      ],
+                                    ),
                                   ],
                                 ),
-                              ],
-                            ),
-                          ):const SliverGap(0),
+                              )
+                            : const SliverGap(0),
                   ],
                 );
               },
