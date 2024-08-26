@@ -8,4 +8,8 @@ class ChangeTabbarIndexCubit extends Cubit<int> {
   void changeIndex(int newIndex){
     emit(index=newIndex);
   }
+
+  void changeReportScreenTabBarIndex(int newIndex){
+emit(index=newIndex);
+  }
 }

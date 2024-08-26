@@ -2,6 +2,7 @@ import 'package:chortkeh/config/dimens/responsive.dart';
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:chortkeh/core/bloc/bottom_navbar_cubit/bottom_navbar_cubit.dart';
 import 'package:chortkeh/features/home/presentation/screens/home_screen.dart';
+import 'package:chortkeh/features/reports/presentation/screens/report_screen.dart';
 import 'package:chortkeh/features/transaction/presentation/screens/add_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -95,27 +96,7 @@ class _MainWrapperState extends State<MainWrapper>
               builder: (context) {
                 return Scaffold(
                   backgroundColor: const Color(0xfff7f9fd),
-                  appBar: AppBar(
-                    backgroundColor: const Color(0xfff7f9fd),
-                    leadingWidth: 32 + constraints.maxWidth * 0.05,
-                    leading: Padding(
-                      padding: EdgeInsetsDirectional.only(
-                          start: constraints.maxWidth * 0.05),
-                      child: SvgPicture.asset(
-                        'assets/icons/ic_chortkeh_small_logo.svg',
-                      ),
-                    ),
-                    actions: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.only(
-                            end: constraints.maxWidth * 0.05),
-                        child: SvgPicture.asset(
-                          width: 32,
-                          'assets/icons/ic_message_icon.svg',
-                        ),
-                      ), // SvgPicture.string('assets/icons/ic_message_icon.svg')
-                    ],
-                  ),
+                  
                   floatingActionButton: SizedBox(
                     width: Responsive.isTablet()
                         ? constraints.maxWidth * 0.1
@@ -189,7 +170,7 @@ class _MainWrapperState extends State<MainWrapper>
                       controller: _tabController,
                       children:const [
                         HomeScreen(),
-                        HomeScreen(),
+                        ReportScreen(),
                         SizedBox.shrink(),
                         HomeScreen(),
                         HomeScreen(),

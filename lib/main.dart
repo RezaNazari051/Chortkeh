@@ -12,7 +12,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/bloc/bottom_navbar_cubit/bottom_navbar_cubit.dart';
-import 'core/screens/main_wrapper.dart';
 import 'features/intro/presentation/screens/splash_screen.dart';
 
 

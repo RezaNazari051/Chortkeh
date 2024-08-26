@@ -3,11 +3,11 @@
 import 'package:chortkeh/config/theme/app_color.dart';
 import 'package:chortkeh/core/widgets/app_buttons.dart';
 import 'package:chortkeh/core/widgets/app_text_form_field.dart';
-import 'package:chortkeh/features/home/presentation/bloc/manage_cards_bloc/card_cubit.dart';
 import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/recent_transactions_bloc.dart';
 import 'package:chortkeh/features/home/presentation/screens/home_screen.dart';
 import 'package:chortkeh/features/home/presentation/widgets/channel_list_bottom_sheet.dart';
 import 'package:chortkeh/features/peleh_peleh/presentation/blocs/cubit/cubit/change_tabbar_index_cubit.dart';
+import 'package:chortkeh/features/reports/presentation/screens/report_screen.dart';
 import 'package:chortkeh/features/transaction/data/models/transaction_model.dart';
 import 'package:chortkeh/features/transaction/presentation/bloc/transaction_form_bloc/bloc/add_transaction_status.dart';
 import 'package:chortkeh/features/transaction/presentation/bloc/transaction_form_bloc/bloc/transaction_form_bloc.dart';
@@ -16,7 +16,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import '../../../../core/utils/constants.dart';
-import '../../../peleh_peleh/presentation/screens/peleh_screen.dart';
 import '../widgets/select_date_and_time_bottom_sheet.dart';
 import '../widgets/select_transaction_bottom_sheet.dart';
 
@@ -73,13 +72,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 preferredSize: const Size.fromHeight(60),
                 child: SizedBox(
                   height: 40,
-                  child: ChortkehTabBar(
-                    titles: const ['دریافت', 'پرداخت'],
-                    state: tabState,
-                    onTap: (index) {
-                      context.read<ChangeTabbarIndexCubit>().changeIndex(index);
-                      context.read<TransactionFormBloc>().add(ResetTransactionFormEvent());
-                    },
+                  child: ChrotkehTabBarWidget(tabLabes: const ['دریافت','پرداخت'], onTap: (index) {
+                    context.read<ChangeTabbarIndexCubit>().changeIndex(index);
+                  }, state: tabState
                   ),
                 ),
               ),

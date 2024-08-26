@@ -11,7 +11,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 import '../../../../core/utils/constants.dart';
-import '../../../../core/utils/json_data.dart';
 import '../widgets/balance_indicator_widget.dart';
 import '../widgets/channel_list_bottom_sheet.dart';
 import '../widgets/features_cards_list.dart';
@@ -34,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // cardList = dbHelper.getCards();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<CardCubit>().loadCards();
+      // context.read<CardCubit>().loadCards();
       context
           .read<RecentTransactionsBloc>()
           .add(GetAllTransactionsEvent(type: TransactionType.withdraw));
@@ -62,148 +61,171 @@ class _HomeScreenState extends State<HomeScreen> {
     return LayoutBuilder(
       builder: (context, constraints) {
         // final CardHelper cardHelper = locator<CardHelper>();
-        return Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.05),
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverPadding(
-                padding: const EdgeInsets.only(
-                  top: 30,
-                  bottom: 16,
-                ),
-                sliver: SliverToBoxAdapter(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'حساب‌کتاب مهرماه',
-                        style: textTheme.labelMedium,
+        return Scaffold(
+          appBar: AppBar(
+                    backgroundColor: const Color(0xfff7f9fd),
+                    leadingWidth: 32 + constraints.maxWidth * 0.05,
+                    leading: Padding(
+                      padding: EdgeInsetsDirectional.only(
+                          start: constraints.maxWidth * 0.05),
+                      child: SvgPicture.asset(
+                        'assets/icons/ic_chortkeh_small_logo.svg',
                       ),
-                      OutlinedButton(
-                        onPressed: () => _showCardListModal(context),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('همه حساب‌ها',
-                                style: textTheme.labelMedium!
-                                    .apply(color: AppColor.primaryColor)),
-                            const Gap(8),
-                            Transform.rotate(
-                              angle: 1.5,
-                              child: const Icon(
-                                size: 20,
-                                Icons.arrow_back_ios_new_rounded,
-                              ),
-                            )
-                          ],
+                    ),
+                    actions: [
+                      Padding(
+                        padding: EdgeInsetsDirectional.only(
+                            end: constraints.maxWidth * 0.05),
+                        child: SvgPicture.asset(
+                          width: 32,
+                          'assets/icons/ic_message_icon.svg',
                         ),
-                      )
+                      ), // SvgPicture.string('assets/icons/ic_message_icon.svg')
                     ],
                   ),
-                ),
-              ),
-              const SliverGap(0),
-              SliverToBoxAdapter(
-                child: BalanceWidget(
-                  deposit: 50000000,
-                  withdrawal: 4900000,
-                  constraints: constraints,
-                ),
-              ),
-              const SliverGap(24),
-              const FeaturesCardsList(),
-              const SliverGap(24),
-
-              ///Recent activities in month Widget
-              SliverToBoxAdapter(
-                child: Row(
-                  children: [
-                    Text('فعالیت‌های اخیر مهرماه',
-                        style: textTheme.labelMedium),
-                    const Spacer(),
-                    PopupMenuButton(
-                        offset: const Offset(0, 30),
-                        child: SvgPicture.asset('$iconUrl/ic_sort.svg'),
-                        itemBuilder: (context) {
-                          return const [
-                            PopupMenuItem(
-                                child: Text(
-                              'جدیدترین فعالیت',
-                            )),
-                            PopupMenuItem(child: Text('قدیمی‌ترین فعالیت')),
-                            PopupMenuItem(child: Text('بیشترین مقدار')),
-                            PopupMenuItem(child: Text('کمترین مقدار')),
-                          ];
-                        }),
-                    const Gap(20),
-                    PopupMenuButton(
-                      offset: const Offset(0, 30),
-                      child: SvgPicture.asset(
-                        '$iconUrl/ic_filter.svg',
-                        fit: BoxFit.cover,
-                        width: constraints.maxWidth * 0.045,
-                      ),
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            child: const Text('دریافتی'),
-                            onTap: () => context
-                                .read<RecentTransactionsBloc>()
-                                .add(GetAllTransactionsEvent(
-                                    type: TransactionType.deposit)),
+          body: Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.05),
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.only(
+                    top: 30,
+                    bottom: 16,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'حساب‌کتاب مهرماه',
+                          style: textTheme.labelMedium,
+                        ),
+                        OutlinedButton(
+                          onPressed: () => _showCardListModal(context),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('همه حساب‌ها',
+                                  style: textTheme.labelMedium!
+                                      .apply(color: AppColor.primaryColor)),
+                              const Gap(8),
+                              Transform.rotate(
+                                angle: 1.5,
+                                child: const Icon(
+                                  size: 20,
+                                  Icons.arrow_back_ios_new_rounded,
+                                ),
+                              )
+                            ],
                           ),
-                          PopupMenuItem(
-                              child: const Text('پرداختی'),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                const SliverGap(0),
+                SliverToBoxAdapter(
+                  child: BalanceWidget(
+                    deposit: 50000000,
+                    withdrawal: 4900000,
+                    constraints: constraints,
+                  ),
+                ),
+                const SliverGap(24),
+                const FeaturesCardsList(),
+                const SliverGap(24),
+          
+                ///Recent activities in month Widget
+                SliverToBoxAdapter(
+                  child: Row(
+                    children: [
+                      Text('فعالیت‌های اخیر مهرماه',
+                          style: textTheme.labelMedium),
+                      const Spacer(),
+                      PopupMenuButton(
+                          offset: const Offset(0, 30),
+                          child: SvgPicture.asset('$iconUrl/ic_sort.svg'),
+                          itemBuilder: (context) {
+                            return const [
+                              PopupMenuItem(
+                                  child: Text(
+                                'جدیدترین فعالیت',
+                              )),
+                              PopupMenuItem(child: Text('قدیمی‌ترین فعالیت')),
+                              PopupMenuItem(child: Text('بیشترین مقدار')),
+                              PopupMenuItem(child: Text('کمترین مقدار')),
+                            ];
+                          }),
+                      const Gap(20),
+                      PopupMenuButton(
+                        offset: const Offset(0, 30),
+                        child: SvgPicture.asset(
+                          '$iconUrl/ic_filter.svg',
+                          fit: BoxFit.cover,
+                          width: constraints.maxWidth * 0.045,
+                        ),
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              child: const Text('دریافتی'),
                               onTap: () => context
                                   .read<RecentTransactionsBloc>()
                                   .add(GetAllTransactionsEvent(
-                                      type: TransactionType.withdraw))),
-                        ];
-                      },
-                    ),
-                  ],
+                                      type: TransactionType.deposit)),
+                            ),
+                            PopupMenuItem(
+                                child: const Text('پرداختی'),
+                                onTap: () => context
+                                    .read<RecentTransactionsBloc>()
+                                    .add(GetAllTransactionsEvent(
+                                        type: TransactionType.withdraw))),
+                          ];
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-
-              // const SliverGap(0),
-
-              // RecentActivitiesChartWidget(constraints: constraints),
-
-              const SliverGap(12),
-              BlocConsumer<RecentTransactionsBloc, RecentTransactionsState>(
-                listenWhen: (previous, current) => previous.getTransactionStatus!=current.getTransactionStatus,
-                listener: (context, state) {
-                  if(state.getTransactionStatus is GetTransactionCompeted){
-                    print('reload');
-                    context.read<CardCubit>().loadCards();
-                  }
-                },
-                buildWhen: (previous, current) =>
-                  previous.getTransactionStatus != current.getTransactionStatus,
-                
-                builder: (context, state) {
-                  if (state.getTransactionStatus is GetTransactionLoading) {
-                    return const SliverToBoxAdapter(
-                        child: CupertinoActivityIndicator());
-                  } else if (state.getTransactionStatus
-                      is GetTransactionCompeted) {
-                    final completedState =
-                        state.getTransactionStatus as GetTransactionCompeted;
-                    return SliverList.builder(
-                      itemCount: completedState.transactions.length,
-                      itemBuilder: (context, index) {
-                        return TransactionDetailWidget(
-                            state: completedState, index: index);
-                      },
-                    );
-                  }
-                  return const SliverGap(0);
-                },
-              ),
-              const SliverGap(50)
-            ],
+          
+                // const SliverGap(0),
+          
+                // RecentActivitiesChartWidget(constraints: constraints),
+          
+                const SliverGap(12),
+                BlocConsumer<RecentTransactionsBloc, RecentTransactionsState>(
+                  listenWhen: (previous, current) => previous.getTransactionStatus!=current.getTransactionStatus,
+                  listener: (context, state) {
+                    if(state.getTransactionStatus is GetTransactionCompeted){
+                      debugPrint('reload');
+                      context.read<CardCubit>().loadCards();
+                    }
+                  },
+                  buildWhen: (previous, current) =>
+                    previous.getTransactionStatus != current.getTransactionStatus,
+                  
+                  builder: (context, state) {
+                    if (state.getTransactionStatus is GetTransactionLoading) {
+                      return const SliverToBoxAdapter(
+                          child: CupertinoActivityIndicator());
+                    } else if (state.getTransactionStatus
+                        is GetTransactionCompeted) {
+                      final completedState =
+                          state.getTransactionStatus as GetTransactionCompeted;
+                      return SliverList.builder(
+                        itemCount: completedState.transactions.length,
+                        itemBuilder: (context, index) {
+                          return TransactionDetailWidget(
+                              state: completedState, index: index);
+                        },
+                      );
+                    }
+                    return const SliverGap(0);
+                  },
+                ),
+                const SliverGap(50)
+              ],
+            ),
           ),
         );
       },
