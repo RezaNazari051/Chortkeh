@@ -12,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/bloc/bottom_navbar_cubit/bottom_navbar_cubit.dart';
+import 'core/screens/main_wrapper.dart';
 import 'features/intro/presentation/screens/splash_screen.dart';
 
 
@@ -59,8 +60,8 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.lightTheme(),
         themeMode: ThemeMode.light,
         routes: routeMethod(),
-        initialRoute: SplashScreen.routeName,
-        // initialRoute: MainWrapper.routeName,
+        // initialRoute: SplashScreen.routeName,
+        initialRoute: MainWrapper.routeName,
         builder: (context, child) {
           return LayoutBuilder(
             builder: (context, constraints) {

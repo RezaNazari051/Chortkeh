@@ -6,14 +6,13 @@ import 'package:chortkeh/features/peleh_peleh/presentation/blocs/cubit/cubit/cha
 import 'package:chortkeh/features/peleh_peleh/presentation/screens/new_peleh_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
-
 import '../../../../core/utils/arguments.dart';
 import '../../../../core/utils/constants.dart';
 import '../../../../core/utils/json_data.dart';
 import '../../../../core/widgets/app_buttons.dart';
+import '../../../../core/widgets/tab_bar_widget.dart';
 
 class PelehScreen extends StatefulWidget {
   static const String routeName = '/peleh-peleh';
@@ -120,14 +119,17 @@ class _PelehScreenState extends State<PelehScreen> {
                   preferredSize: const Size.fromHeight(60),
                   child: SizedBox(
                     height: 40,
-                    child: ChortkehTabBar(state: state, onTap: (index) {
-                      context.read<ChangeTabbarIndexCubit>().changeIndex(index);
-                      },
-                      titles: const [
-                        'فعال',
-                        'تکمیل شده'
-                      ],
-                      ),
+                    child: ChrotkehTabBarWidget(tabLabes: const ['فعال','تکمیل شده'], onTap: 
+                    (index) => context.read<ChangeTabbarIndexCubit>().changeIndex(index), 
+                    state: state),
+                    // child: ChortkehTabBar(state: state, onTap: (index) {
+                    //   context.read<ChangeTabbarIndexCubit>().changeIndex(index);
+                    //   },
+                    //   titles: const [
+                    //     'فعال',
+                    //     'تکمیل شده'
+                    //   ],
+                    //   ),
                   ),
                 ),
               ),
@@ -459,77 +461,79 @@ class NewPelehBottomSheet extends StatelessWidget {
   }
 }
 
-class ChortkehTabBar extends StatefulWidget {
-  const ChortkehTabBar({super.key, required this.state, required this.onTap, required this.titles});
-  final int state;
-final Function(int) onTap;
-final List<String>titles;
-  @override
-  State<ChortkehTabBar> createState() => _ChortkehTabBarState();
-}
+// class ChortkehTabBar extends StatefulWidget {
+//   const ChortkehTabBar({super.key, required this.state, required this.onTap, required this.titles});
+//   final int state;
+// final Function(int) onTap;
+// final List<String>titles;
+//   @override
+//   State<ChortkehTabBar> createState() => _ChortkehTabBarState();
+// }
 
-int selected = 0;
-class _ChortkehTabBarState extends State<ChortkehTabBar> {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: buildTabs(),
-    );
-  }
+// class _ChortkehTabBarState extends State<ChortkehTabBar> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Stack(
+//       clipBehavior: Clip.none,
+//       children: buildTabs(),
+//     );
+//   }
 
-  List<Widget> buildTabs() {
-    // Build tabs with priority order based on selection
-    List<Widget> tabs = [
-      _getTab(positionRigth: 20.w, index: 0, title: widget.titles[0]),
-      _getTab(positionLeft: 20.w, index: 1, title: widget.titles[1]),
-    ];
+//   List<Widget> buildTabs() {
+//     // Build tabs with priority order based on selection
+//     List<Widget> tabs = [
+//       _getTab(positionRigth: 20.w, index: 0, title: widget.titles[0]),
+//       _getTab(positionLeft: 20.w, index: 1, title: widget.titles[1]),
+//     ];
 
-    // If selected is 0, index 1 tab should be on top, otherwise index 0 tab
-    if (widget.state == 0) {
-      return tabs.reversed
-          .toList(); // Reverse to bring the first item to the front
-    }
-    return tabs; // Default order
-  }
+//     // If selected is 0, index 1 tab should be on top, otherwise index 0 tab
+//     if (widget.state == 0) {
+//       return tabs.reversed
+//           .toList(); // Reverse to bring the first item to the front
+//     }
+//     return tabs; // Default order
+//   }
 
-  Widget _getTab(
-      {double? positionLeft,
-      double? positionRigth,
-      required int index,
-      required String title}) {
-    return Positioned(
-      right: positionRigth,
-      left: positionLeft,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () {
-          if (index != widget.state) {
-            widget.onTap(index);
-            // context.read<ChangeTabbarIndexCubit>().changeIndex(index);
-          }
-        },
-        child: Container(
-          width: 200,
-          height: 40,
-          decoration: BoxDecoration(
-            color: widget.state == index ? AppColor.primaryColor : null,
-            border: Border.all(
-              color:
-                  widget.state != index ? Colors.grey : AppColor.primaryColor,
-              width: widget.state != index ? 1 : 0,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Center(
-            child: Text(
-              title,
-              style:
-                  TextStyle(color: widget.state != index ? null : Colors.white),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   Widget _getTab(
+//       {double? positionLeft,
+//       double? positionRigth,
+//       required int index,
+//       required String title}) {
+//     return Positioned(
+//       right: positionRigth,
+//       left: positionLeft,
+//       child: InkWell(
+//         borderRadius: BorderRadius.circular(8),
+//         onTap: () {
+//           if (index != widget.state) {
+//             widget.onTap(index);
+//             // context.read<ChangeTabbarIndexCubit>().changeIndex(index);
+//           }
+//         },
+//         child: Container(
+//           width: 200,
+//           height: 40,
+//           decoration: BoxDecoration(
+//             color: widget.state == index ? AppColor.primaryColor : null,
+//             border: Border.all(
+//               color:
+//                   widget.state != index ? Colors.grey : AppColor.primaryColor,
+//               width: widget.state != index ? 1 : 0,
+//             ),
+//             borderRadius: BorderRadius.circular(8),
+//           ),
+//           child: Center(
+//             child: Text(
+//               title,
+//               style:
+//                   TextStyle(color: widget.state != index ? null : Colors.white),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+

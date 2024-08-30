@@ -1,8 +1,12 @@
 import 'package:chortkeh/config/theme/app_color.dart';
+import 'package:chortkeh/core/utils/extensions.dart';
 import 'package:chortkeh/features/peleh_peleh/presentation/blocs/cubit/cubit/change_tabbar_index_cubit.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+
+import '../../../../core/widgets/tab_bar_widget.dart';
 
 class ReportScreen extends StatefulWidget {
   const ReportScreen({super.key});
@@ -24,82 +28,122 @@ class _ReportScreenState extends State<ReportScreen> {
             'گزارشات',
           ),
         ),
-        body: Column(
-          children: [
-            BlocBuilder<ChangeTabbarIndexCubit, int>(
-              builder: (context, state) {
-                return ChrotkehTabBarWidget(
-                  tabLabes: tabLabes,
-                  state: state,
-                  onTap: (index) => context
-                      .read<ChangeTabbarIndexCubit>()
-                      .changeReportScreenTabBarIndex(index),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ChrotkehTabBarWidget extends StatelessWidget {
-  const ChrotkehTabBarWidget({
-    super.key,
-    required this.tabLabes,
-    required this.onTap, required this.state,
-  });
-  final Function(int index) onTap;
-  final int state;
-  final List<String> tabLabes;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.w),
-      width: double.infinity,
-      height: 40,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColor.lightGrayColor, width: 1)),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Row(
-              children: List.generate(
-            tabLabes.length,
-            (index) =>_getTap(context, index, tabLabes[index], onTap)
-           
-            
-          ));
-        },
-      ),
-    );
-  }
-  Widget _getTap(
-    BuildContext context,
-    int index,
-    String lable,
-    Function(int index) onTap,
-  ){
-    return  Expanded(
-      child: GestureDetector(
-        onTap: () => onTap(index),
-        child: Container(
-          height: 40,
-          decoration: BoxDecoration(
-              color: index == state ? AppColor.primaryColor : null,
-              borderRadius: BorderRadius.circular(8)),
-          child: Center(
-              child: Text(
-            lable,
-            style: Theme.of(context).textTheme.bodyMedium!.apply(
-                  color:
-                      state == index ? Colors.white : const Color(0xffADADAD),
+        body: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+          return Padding(
+            padding:
+                EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.05),
+            child: Column(
+              children: [
+                BlocBuilder<ChangeTabbarIndexCubit, int>(
+                  builder: (context, state) {
+                    return ChrotkehTabBarWidget(
+                      tabLabes: tabLabes,
+                      state: state,
+                      onTap: (index) => context
+                          .read<ChangeTabbarIndexCubit>()
+                          .changeReportScreenTabBarIndex(index),
+                    );
+                  },
                 ),
-          )),
-        ),
+                const Gap(25),
+                SizedBox(
+                  width: double.infinity,
+                  height: 280,
+                  child: BarChart(
+                    BarChartData(
+                        borderData: FlBorderData(show: true),
+                        maxY: 20000000,
+                        barGroups: [
+                          BarChartGroupData(x: 0, barRods: [
+                            BarChartRodData(toY: 4700000, color: Colors.red),
+                            BarChartRodData(toY: 6000000, color: Colors.green)
+                          ]),
+                          BarChartGroupData(x: 1, barRods: [
+                            BarChartRodData(toY: 8000000, color: Colors.red),
+                            BarChartRodData(toY: 13500000, color: Colors.green)
+                          ]),
+                          BarChartGroupData(x: 2, barRods: [
+                            BarChartRodData(toY: 10025000, color: Colors.red),
+                            BarChartRodData(toY: 5000000, color: Colors.green)
+                          ]),
+                          BarChartGroupData(x: 3, barRods: [
+                            BarChartRodData(toY: 10025000, color: Colors.red),
+                            BarChartRodData(toY: 5000000, color: Colors.green)
+                          ]),
+                          BarChartGroupData(x: 4, barRods: [
+                            BarChartRodData(toY: 10025000, color: Colors.red),
+                            BarChartRodData(toY: 5000000, color: Colors.green)
+                          ]),
+                        ],
+                        titlesData: FlTitlesData(
+                          rightTitles: const AxisTitles(),
+                          topTitles: const AxisTitles(),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              getTitlesWidget: (value, meta) {
+                                return Text(value.toStringAsFixed(0).toCurrencyFormat(),
+                                    style: TextStyle(color: Colors.black));
+                              },
+                              reservedSize: 100,
+                            ),
+                          ),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                                showTitles: true,
+                                reservedSize: 40,
+                                getTitlesWidget: bottomTitles),
+                          ),
+                        ),
+                        gridData: FlGridData(
+                          drawVerticalLine: false,
+                          getDrawingHorizontalLine: (value) =>
+                              const FlLine(color: AppColor.cardBorderGrayColor,strokeWidth: 1),
+                        )),
+                  ),
+                )
+              ],
+            ),
+          );
+        }),
       ),
+    );
+  }
+
+  Widget bottomTitles(double value, TitleMeta meta) {
+    final titles = <String>['Mn', 'Te', 'Wd', 'Tu', 'Fr', 'St', 'Su'];
+
+    final Widget text = Text(
+      titles[value.toInt()],
+      style: const TextStyle(
+        color: Color(0xff7589a2),
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      ),
+    );
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 16, //margin top
+      child: text,
+    );
+  }
+
+  Widget rightTitles(double value, TitleMeta meta) {
+    final Widget text = Text(
+      value.toStringAsFixed(0).toCurrencyFormat(),
+      style: const TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      ),
+    );
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 16, //margin top
+      child: text,
     );
   }
 }
