@@ -19,9 +19,6 @@ import 'features/intro/presentation/screens/splash_screen.dart';
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
-  // final path = join( await getDatabasesPath(), 'Card.db');
-  //
-  // await deleteDatabase(path);
   await initLocator();
 
 
@@ -56,12 +53,12 @@ class MyApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate
         ],
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Chortkeh',
         theme: AppTheme.lightTheme(),
         themeMode: ThemeMode.light,
         routes: routeMethod(),
-        // initialRoute: SplashScreen.routeName,
-        initialRoute: MainWrapper.routeName,
+        // initialRoute: MainWrapper.routeName,
+        initialRoute: SplashScreen.routeName,
         builder: (context, child) {
           return LayoutBuilder(
             builder: (context, constraints) {

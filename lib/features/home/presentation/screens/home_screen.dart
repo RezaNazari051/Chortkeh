@@ -60,8 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // final CardHelper cardHelper = locator<CardHelper>();
         return Scaffold(
+             backgroundColor: const Color(0xfff7f9fd),
           appBar: AppBar(
                     backgroundColor: const Color(0xfff7f9fd),
                     leadingWidth: 32 + constraints.maxWidth * 0.05,

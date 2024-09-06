@@ -39,6 +39,7 @@ class _ReportScreenState extends State<ReportScreen> {
 
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: const Text(
             'گزارشات',
           ),
@@ -239,9 +240,11 @@ class _BarChatWidgetState extends State<BarChatWidget> {
                     x: index,
                     barRods: [
                       BarChartRodData(
+                        borderRadius: BorderRadius.circular(2),
                           toY: chartData[index].totalWithdrawals,
                           color: AppColor.redColor ),
                       BarChartRodData(
+                          borderRadius: BorderRadius.circular(2),
                           toY: chartData[index].totalDeposits,
                           color: AppColor.greenColor)
                     ],

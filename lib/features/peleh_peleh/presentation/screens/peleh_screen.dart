@@ -104,6 +104,7 @@ class _PelehScreenState extends State<PelehScreen> {
           return LayoutBuilder(builder: (context, constraints) {
             return Scaffold(
               appBar: AppBar(
+                centerTitle: true,
                 title: const Text(
                   'پله پله های من',
                 ),
@@ -119,17 +120,12 @@ class _PelehScreenState extends State<PelehScreen> {
                   preferredSize: const Size.fromHeight(60),
                   child: SizedBox(
                     height: 40,
-                    child: ChrotkehTabBarWidget(tabLabes: const ['فعال','تکمیل شده'], onTap: 
-                    (index) => context.read<ChangeTabbarIndexCubit>().changeIndex(index), 
-                    state: state),
-                    // child: ChortkehTabBar(state: state, onTap: (index) {
-                    //   context.read<ChangeTabbarIndexCubit>().changeIndex(index);
-                    //   },
-                    //   titles: const [
-                    //     'فعال',
-                    //     'تکمیل شده'
-                    //   ],
-                    //   ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal:  constraints.maxWidth *  0.05),
+                      child: ChrotkehTabBarWidget(tabLabes: const ['فعال','تکمیل شده'], onTap:
+                      (index) => context.read<ChangeTabbarIndexCubit>().changeIndex(index),
+                      state: state),
+                    ),
                   ),
                 ),
               ),

@@ -55,35 +55,39 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       ],
       child: BlocBuilder<ChangeTabbarIndexCubit, int>(
         builder: (context, tabState) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                'ثبت تراکنش',
-              ),
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: SvgPicture.asset(
-                  '$iconUrl/ic_arrow_right.svg',
+          return LayoutBuilder(
+            builder: (context, constraints) => Scaffold(
+              appBar: AppBar(
+                centerTitle: true,
+                title: const Text(
+                  'ثبت تراکنش',
                 ),
-              ),
-              bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(60),
-                child: SizedBox(
-                  height: 40,
-                  child: ChrotkehTabBarWidget(tabLabes: const ['دریافت','پرداخت'], onTap: (index) {
-                    context.read<ChangeTabbarIndexCubit>().changeIndex(index);
-                  }, state: tabState
+                leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: SvgPicture.asset(
+                    '$iconUrl/ic_arrow_right.svg',
+                  ),
+                ),
+                bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(60),
+                  child: Padding(
+                    padding:  EdgeInsets.symmetric(horizontal:constraints.maxWidth *0.05),
+                    child: SizedBox(
+                      height: 40,
+                      child: ChrotkehTabBarWidget(tabLabes: const ['دریافت','پرداخت'], onTap: (index) {
+                        context.read<ChangeTabbarIndexCubit>().changeIndex(index);
+                      }, state: tabState
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return Padding(
+              body: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: constraints.maxWidth * 0.05,
                           vertical: 24),
@@ -97,77 +101,77 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                               amountController: _amountController),
                         ],
                       ),
-                    );
-                  }),
-                ),
-                BlocConsumer<TransactionFormBloc, TransactionFormState>(
-                  listenWhen: (previous, current) => previous.transactionStatus!=current.transactionStatus,
-                  // listenWhen: (previous, current) {
-                  //   return previous.transactionStatus != current.transactionStatus;
-                  // },
-                  listener: (context, state) {
-                    if (state.transactionStatus is AddTransactionFailed) {
-                      final data =
-                          state.transactionStatus as AddTransactionFailed;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          content: Text(data.error),
-                        ),
-                      );
-                    }
-                    else if(state.transactionStatus is AddTransactionCompleted){
-                      
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          content: Text('تراکنش با موفقیت ثبت شد'),
-                        ),
-                      );
-                      Future.delayed(const Duration(seconds: 2),() => Navigator.pop(context),).then((value) {
-                        // context.read<CardCubit>().loadCards();
-                        context.read<RecentTransactionsBloc>().add(GetAllTransactionsEvent(type: TransactionType.withdraw));
-                      },);
-                    }
-                  },
-                  builder: (context, state) {
-                    return FillElevatedButton(
-                        onPressed: () {
-                          if (state.channelStatus?.cardModel != null &&
-                              state.categoryStatus?.category != null &&
-                              state.dateStatus?.date != null &&
-                              state.timeStatus?.time != null &&
-                              _amountController.text.isNotEmpty) {
-                            //* Selected date
-                            final DateTime date = state.dateStatus!.date!;
-                            //* Selected time
-                            final DateTime time = state.timeStatus!.time!;
-                            //* Merge selected date & selected time
-                            final DateTime dateTime = DateTime(date.year,
-                                date.month, date.day, time.hour, time.minute);
-                            final TransactionModel transactionModel =
-                                TransactionModel(
-                                    cardId: state.channelStatus!.cardModel!.id!,
-                                    categoryId:
-                                        state.categoryStatus!.category!.id,
-                                    amount:
-                                        double.parse(_amountController.text),
-                                    dateTime: dateTime,
-                                    type: tabState == 0
-                                        ? TransactionType.deposit
-                                        : TransactionType.withdraw);
+                    ),
+                  ),
+                  BlocConsumer<TransactionFormBloc, TransactionFormState>(
+                    listenWhen: (previous, current) => previous.transactionStatus!=current.transactionStatus,
+                    // listenWhen: (previous, current) {
+                    //   return previous.transactionStatus != current.transactionStatus;
+                    // },
+                    listener: (context, state) {
+                      if (state.transactionStatus is AddTransactionFailed) {
+                        final data =
+                            state.transactionStatus as AddTransactionFailed;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(data.error),
+                          ),
+                        );
+                      }
+                      else if(state.transactionStatus is AddTransactionCompleted){
 
-                            context.read<TransactionFormBloc>().add(
-                                AddTransactionEvent(
-                                    transactionModel: transactionModel));
-                          }
-                        },
-                        loading: state.transactionStatus is AddTransactionLoading,
-                        title: tabState == 0 ? 'ثبت درآمد' : 'ثبت هزینه');
-                  },
-                ),
-                const Gap(64)
-              ],
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text('تراکنش با موفقیت ثبت شد'),
+                          ),
+                        );
+                        Future.delayed(const Duration(seconds: 2),() => Navigator.pop(context),).then((value) {
+                          // context.read<CardCubit>().loadCards();
+                          context.read<RecentTransactionsBloc>().add(GetAllTransactionsEvent(type: TransactionType.withdraw));
+                        },);
+                      }
+                    },
+                    builder: (context, state) {
+                      return FillElevatedButton(
+                          onPressed: () {
+                            if (state.channelStatus?.cardModel != null &&
+                                state.categoryStatus?.category != null &&
+                                state.dateStatus?.date != null &&
+                                state.timeStatus?.time != null &&
+                                _amountController.text.isNotEmpty) {
+                              //* Selected date
+                              final DateTime date = state.dateStatus!.date!;
+                              //* Selected time
+                              final DateTime time = state.timeStatus!.time!;
+                              //* Merge selected date & selected time
+                              final DateTime dateTime = DateTime(date.year,
+                                  date.month, date.day, time.hour, time.minute);
+                              final TransactionModel transactionModel =
+                                  TransactionModel(
+                                      cardId: state.channelStatus!.cardModel!.id!,
+                                      categoryId:
+                                          state.categoryStatus!.category!.id,
+                                      amount:
+                                          double.parse(_amountController.text),
+                                      dateTime: dateTime,
+                                      type: tabState == 0
+                                          ? TransactionType.deposit
+                                          : TransactionType.withdraw);
+
+                              context.read<TransactionFormBloc>().add(
+                                  AddTransactionEvent(
+                                      transactionModel: transactionModel));
+                            }
+                          },
+                          loading: state.transactionStatus is AddTransactionLoading,
+                          title: tabState == 0 ? 'ثبت درآمد' : 'ثبت هزینه');
+                    },
+                  ),
+                  const Gap(64)
+                ],
+              ),
             ),
           );
         },
@@ -190,62 +194,64 @@ class TransactionFormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TransactionFormBloc, TransactionFormState>(
       builder: (context, state) {
-        return Column(
-          children: [
-            PTextFormField(
-                focusBorderColor: Colors.black,
-                title: 'مبلغ',
-                hintText: isDeposit(mode) ? 'مبلغ درآمد' : 'مبلغ هزینه',
-                controller: _amountController),
-            //* SelectTransactionChannel
-            DropDownBottomSheet(
-                hintText: isDeposit(mode) ? 'انقال به' : 'برداشت از',
-                bottomSheetContent: BlocProvider.value(
-                  value: context.read<TransactionFormBloc>(),
-                  child: const ChannelListBottomSheet(
-                    inTransaction: true,
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              PTextFormField(
+                  focusBorderColor: Colors.black,
+                  title: 'مبلغ',
+                  hintText: isDeposit(mode) ? 'مبلغ درآمد' : 'مبلغ هزینه',
+                  controller: _amountController),
+              //* SelectTransactionChannel
+              DropDownBottomSheet(
+                  hintText: isDeposit(mode) ? 'انقال به' : 'برداشت از',
+                  bottomSheetContent: BlocProvider.value(
+                    value: context.read<TransactionFormBloc>(),
+                    child: const ChannelListBottomSheet(
+                      inTransaction: true,
+                    ),
                   ),
-                ),
-                title: state.channelStatus?.cardModel?.cardName),
-            //* SelectTransactionCategory
-            DropDownBottomSheet(
-                hintText: 'دسته‌بندی',
-                bottomSheetContent: BlocProvider.value(
-                  value: context.read<TransactionFormBloc>(),
-                  child: SelectCategoryBottomSheetWidget(
-                    mode: mode,
+                  title: state.channelStatus?.cardModel?.cardName),
+              //* SelectTransactionCategory
+              DropDownBottomSheet(
+                  hintText: 'دسته‌بندی',
+                  bottomSheetContent: BlocProvider.value(
+                    value: context.read<TransactionFormBloc>(),
+                    child: SelectCategoryBottomSheetWidget(
+                      mode: mode,
+                    ),
                   ),
-                ),
-                title: state.categoryStatus?.category?.name),
-
-            DropDownBottomSheet(
-              hintText: 'تاریخ',
-              suffixIconPath: 'ic_calendar.svg',
-              title: state.dateStatus?.date == null
-                  ? null
-                  : formatJalali(state.dateStatus!.date!,
-                      mode: FormatMode.withMonthName),
-              // state.dateStatus!.date=null?
-              //      formatJalali(state.dateStatus!.date!,
-              //         mode: FormatMode.withMonthName)
-              //   :null,
-              bottomSheetContent: BlocProvider.value(
-                  value: context.read<TransactionFormBloc>(),
-                  child: const SelectDateAndTimeBottomSheetWidget()),
-            ),
-            DropDownBottomSheet(
-              alignment: MainAxisAlignment.end,
-              title: state.timeStatus?.time == null
-                  ? null
-                  : formatTime(state.timeStatus!.time!),
-              hintText: 'ساعت',
-              suffixIconPath: 'ic_clock.svg',
-              bottomSheetContent: BlocProvider.value(
-                  value: context.read<TransactionFormBloc>(),
-                  child:
-                      const SelectDateAndTimeBottomSheetWidget(showTime: true)),
-            ),
-          ],
+                  title: state.categoryStatus?.category?.name),
+          
+              DropDownBottomSheet(
+                hintText: 'تاریخ',
+                suffixIconPath: 'ic_calendar.svg',
+                title: state.dateStatus?.date == null
+                    ? null
+                    : formatJalali(state.dateStatus!.date!,
+                        mode: FormatMode.withMonthName),
+                // state.dateStatus!.date=null?
+                //      formatJalali(state.dateStatus!.date!,
+                //         mode: FormatMode.withMonthName)
+                //   :null,
+                bottomSheetContent: BlocProvider.value(
+                    value: context.read<TransactionFormBloc>(),
+                    child: const SelectDateAndTimeBottomSheetWidget()),
+              ),
+              DropDownBottomSheet(
+                alignment: MainAxisAlignment.end,
+                title: state.timeStatus?.time == null
+                    ? null
+                    : formatTime(state.timeStatus!.time!),
+                hintText: 'ساعت',
+                suffixIconPath: 'ic_clock.svg',
+                bottomSheetContent: BlocProvider.value(
+                    value: context.read<TransactionFormBloc>(),
+                    child:
+                        const SelectDateAndTimeBottomSheetWidget(showTime: true)),
+              ),
+            ],
+          ),
         );
       },
     );

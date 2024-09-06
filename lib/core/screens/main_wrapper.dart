@@ -95,8 +95,6 @@ class _MainWrapperState extends State<MainWrapper>
             return ShowCaseWidget(
               builder: (context) {
                 return Scaffold(
-                  backgroundColor: const Color(0xfff7f9fd),
-                  
                   floatingActionButton: SizedBox(
                     width: Responsive.isTablet()
                         ? constraints.maxWidth * 0.1
