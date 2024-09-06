@@ -1,6 +1,7 @@
 import 'package:chortkeh/core/operation/prefs_operator/prefs_operator.dart';
 import 'package:chortkeh/features/home/data/data_source/local/cards_data_helper.dart';
 import 'package:chortkeh/features/home/data/model/card_model.dart';
+import 'package:chortkeh/features/reports/data/repository/transactions_report_repository.dart';
 import 'package:chortkeh/features/transaction/data/data_source/local/transaction_data_helper.dart';
 import 'package:chortkeh/features/transaction/data/models/transaction_model.dart';
 import 'package:get_it/get_it.dart';
@@ -16,10 +17,11 @@ Future<void>initLocator()async{
 
   locator.registerSingleton<PrefsOperator>(PrefsOperator(sharedPreferences));
 
-
+  
 
     await initHive();
 
+  locator.registerSingleton<TransactionsReportsRepository>(TransactionsReportsRepository(locator<TransactionDataHelper>()));
 
 }
 

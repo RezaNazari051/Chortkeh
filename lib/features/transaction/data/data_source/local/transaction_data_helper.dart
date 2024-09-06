@@ -57,7 +57,17 @@ class TransactionDataHelper {
     }
     return _box.values.toList();
   }
+  List<TransactionModel> getTransactionsByDate(DateTime startDate, DateTime endDate) {
+    final transactions = _box.values.where((TransactionModel transaction) {
+      final transactionDate = transaction.dateTime;
 
+      // بررسی اینکه آیا تراکنش در بازه زمانی قرار دارد یا دقیقا برابر با startDate یا endDate است
+      return (transactionDate.isAfter(startDate) || transactionDate.isAtSameMomentAs(startDate)) &&
+          (transactionDate.isBefore(endDate) || transactionDate.isAtSameMomentAs(endDate));
+    }).toList();
+
+    return transactions;
+  }
   Future<bool> _checkTransacionIsExist(String? id) async {
     final transactions = _box.values.toList();
 
