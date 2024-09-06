@@ -50,6 +50,7 @@ dependencies:
   shared_preferences: ^2.3.0
   showcaseview: ^3.0.0
   smooth_page_indicator: ^1.1.0
+  syncfusion_flutter_charts: ^26.1.42 
   tutorial_coach_mark: ^1.2.11
   hive: ^2.2.3
   hive_flutter: ^1.1.0
