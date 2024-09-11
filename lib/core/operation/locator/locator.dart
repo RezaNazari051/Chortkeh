@@ -1,6 +1,8 @@
 import 'package:chortkeh/core/operation/prefs_operator/prefs_operator.dart';
 import 'package:chortkeh/features/home/data/data_source/local/cards_data_helper.dart';
 import 'package:chortkeh/features/home/data/model/card_model.dart';
+import 'package:chortkeh/features/home/data/repository/home_repository.dart';
+import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/recent_transactions_bloc.dart';
 import 'package:chortkeh/features/reports/data/repository/transactions_report_repository.dart';
 import 'package:chortkeh/features/transaction/data/data_source/local/transaction_data_helper.dart';
 import 'package:chortkeh/features/transaction/data/models/transaction_model.dart';
@@ -21,6 +23,12 @@ Future<void>initLocator()async{
 
     await initHive();
 
+   //Blocs
+  locator.registerSingleton<RecentTransactionsBloc>(RecentTransactionsBloc(locator<TransactionDataHelper>()));
+
+
+  //Repositories
+  locator.registerSingleton<HomeRepository>(HomeRepository(locator<TransactionDataHelper>()));
   locator.registerSingleton<TransactionsReportsRepository>(TransactionsReportsRepository(locator<TransactionDataHelper>()));
 
 }

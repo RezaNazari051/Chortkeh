@@ -277,7 +277,23 @@ class _BarChatWidgetState extends State<BarChatWidget> {
             ),
           ),
 
-
+          SizedBox(width: 200,height: 200,
+          // child:  PieChart(
+          //   PieChartData(
+          //       // centerSpaceRadius: constraints.maxWidth * 0.1,
+          //       sections: showingSection(context, state, colorList),
+          //       pieTouchData: PieTouchData(
+          //         touchCallback: (FlTouchEvent event, response) {
+          //           if (response != null &&
+          //               response.touchedSection != null) {
+          //             context.read<ChartSectionCubit>().toggleChartItem(
+          //                 response.touchedSection!.touchedSectionIndex);
+          //           }
+          //         },
+          //       ),
+          //       sectionsSpace: 5),
+          // )
+          )
         ],
       );
     }

@@ -17,7 +17,7 @@ class TransactionDataHelper {
     final CardsDataHelper cardHelper = locator<CardsDataHelper>();
     final CardModel card = await cardHelper.getCardWithId(transaction.cardId);
 
-    if (await _checkTransacionIsExist(transaction.id)) {
+    if (await _checkTransactionIsExist(transaction.id)) {
       throw Exception('این تراکنش از قبل وجود دارد');
     }
 
@@ -26,10 +26,8 @@ class TransactionDataHelper {
 
     if (transaction.type == TransactionType.withdraw) {
       if (transaction.amount > card.balance) {
-        // پرتاب خطا در صورت کافی نبودن موجودی کارت
         throw 'مبلغ برداشتی بیشتر از موجودی کارت است';
       }
-      // در اینجا فقط زمانی که مبلغ کافی است کد اجرا می‌شود
       final CardModel updatedCard =
           card.copyWith(balance: card.balance - transaction.amount);
       try {
@@ -39,7 +37,6 @@ class TransactionDataHelper {
         throw 'خطا در زمان برداشت: ${e.toString()}';
       }
     } else if (transaction.type == TransactionType.deposit) {
-      // در اینجا فقط واریز انجام می‌شود
       final CardModel updatedCard =
           card.copyWith(balance: card.balance + transaction.amount);
       try {
@@ -57,18 +54,19 @@ class TransactionDataHelper {
     }
     return _box.values.toList();
   }
+
   List<TransactionModel> getTransactionsByDate(DateTime startDate, DateTime endDate) {
     final transactions = _box.values.where((TransactionModel transaction) {
       final transactionDate = transaction.dateTime;
 
-      // بررسی اینکه آیا تراکنش در بازه زمانی قرار دارد یا دقیقا برابر با startDate یا endDate است
       return (transactionDate.isAfter(startDate) || transactionDate.isAtSameMomentAs(startDate)) &&
           (transactionDate.isBefore(endDate) || transactionDate.isAtSameMomentAs(endDate));
     }).toList();
 
     return transactions;
   }
-  Future<bool> _checkTransacionIsExist(String? id) async {
+
+  Future<bool> _checkTransactionIsExist(String? id) async {
     final transactions = _box.values.toList();
 
     return transactions.any((element) => element.id == id);
@@ -81,7 +79,6 @@ class TransactionDataHelper {
 
     final CardsDataHelper cardsDataHelper = locator<CardsDataHelper>();
     for (final transaction in transactions) {
-      //* Get card information using transaction cardId
       final card = await cardsDataHelper.getCardWithId(transaction.cardId);
 
       final CategoryModel category =
@@ -94,7 +91,7 @@ class TransactionDataHelper {
   }
 
   Future<void> deleteTransaction(TransactionDetail detail) async {
-    if (await _checkTransacionIsExist(detail.transaction.id)) {
+    if (await _checkTransactionIsExist(detail.transaction.id)) {
       final CardsDataHelper cardHelper = locator<CardsDataHelper>();
       final CardModel card =
           await cardHelper.getCardWithId(detail.transaction.cardId);

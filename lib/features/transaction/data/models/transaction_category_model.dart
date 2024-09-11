@@ -6,7 +6,9 @@ class CategoryModel{
   final String name;
   final String iconPath;
   final Color backgroundColor;
+  final Color primaryColor;
 
-CategoryModel({required this.id,required this.name,required this.iconPath,required this.backgroundColor});
+CategoryModel({required this.id,required this.name,required this.iconPath,required this.backgroundColor,
+required this.primaryColor});
 
 }

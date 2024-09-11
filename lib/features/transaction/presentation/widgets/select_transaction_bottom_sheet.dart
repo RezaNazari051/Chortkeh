@@ -35,11 +35,11 @@ class SelectCategoryBottomSheetWidget extends StatelessWidget {
           Expanded(
               child: ListView.separated(
             separatorBuilder: (context, index) => const Gap(16),
-            itemCount: depositTransactionCatefories.length,
+            itemCount: depositTransactionCategories.length,
             itemBuilder: (listContext, index) {
               final CategoryModel category = mode==TransactionFormWidgetMode.deposit?
-                  depositTransactionCatefories[index]:
-                  withdrawlTransactionCategory[index];
+                  depositTransactionCategories[index]:
+                  withdrawalTransactionCategory[index];
                   
               return Padding(
                 padding: EdgeInsets.symmetric(

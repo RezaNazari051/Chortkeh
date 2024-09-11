@@ -29,7 +29,7 @@ void main() async{
       BlocProvider(create: (context) => ChartSectionCubit()),
       BlocProvider(create: (context) => BankCubit()),
       BlocProvider(create: (context) => CardCubit()),
-      BlocProvider(create: (context) => RecentTransactionsBloc()),
+      BlocProvider(create: (context) => RecentTransactionsBloc(locator())),
     ],
     child: const MyApp(),
   ));
@@ -57,8 +57,8 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.lightTheme(),
         themeMode: ThemeMode.light,
         routes: routeMethod(),
-        // initialRoute: MainWrapper.routeName,
-        initialRoute: SplashScreen.routeName,
+        initialRoute: MainWrapper.routeName,
+        // initialRoute: SplashScreen.routeName,
         builder: (context, child) {
           return LayoutBuilder(
             builder: (context, constraints) {

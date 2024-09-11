@@ -14,6 +14,7 @@ import '../../../../core/utils/constants.dart';
 import '../widgets/balance_indicator_widget.dart';
 import '../widgets/channel_list_bottom_sheet.dart';
 import '../widgets/features_cards_list.dart';
+import '../widgets/recent_activities_chart_widget.dart';
 import '../widgets/tranaction_detail_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -188,10 +189,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
           
-                // const SliverGap(0),
+                const SliverGap(10),
           
-                // RecentActivitiesChartWidget(constraints: constraints),
-          
+                RecentActivitiesChartWidget(constraints: constraints),
+
                 const SliverGap(12),
                 BlocConsumer<RecentTransactionsBloc, RecentTransactionsState>(
                   listenWhen: (previous, current) => previous.getTransactionStatus!=current.getTransactionStatus,

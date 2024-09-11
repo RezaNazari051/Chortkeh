@@ -17,3 +17,10 @@ final class DeleteTransactionEvent extends RecentTransactionsEvent{
   @override
   List<Object?> get props => [];
 }
+
+final class GetMonthlyChartDataEvent extends RecentTransactionsEvent {
+  final int touchedSection;
+  GetMonthlyChartDataEvent({ this.touchedSection=-1});
+  @override
+  List<Object?> get props => [];
+}
