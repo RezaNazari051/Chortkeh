@@ -31,7 +31,7 @@ class RecentTransactionsBloc
         emit(state.copyWith(newGetTransactionStatus: GetTransactionLoading()));
 
         final List<TransactionDetail> transactions =
-            await _dataHelper.getTransactionDetails(event.type);
+            await _dataHelper.getAllTransactionsDetails(event.type);
         emit(
           state.copyWith(
             newGetTransactionStatus:

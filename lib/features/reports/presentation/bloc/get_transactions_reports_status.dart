@@ -1,6 +1,8 @@
 import 'package:chortkeh/features/reports/data/repository/transactions_report_repository.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../data/models/transaction_chart_data_model.dart';
+
 abstract class GetTransactionReportsStatus extends Equatable{}
 
 
@@ -14,7 +16,7 @@ class GetReportsLoading extends GetTransactionReportsStatus{
 }
 class GetReportsSuccess extends GetTransactionReportsStatus{
   GetReportsSuccess({required this.chartData});
-  final List<TransactionChartData> chartData;
+  final List<TransactionChartDataModel> chartData;
 
   @override
   List<Object> get props => [];

@@ -8,3 +8,10 @@ class GetTransactionsReportsEvent extends ReportsEvent{
   @override
   List<Object?> get props =>[chartType];
 }
+class ExportTransactionToExcelEvent extends ReportsEvent{
+  final ReportChartType type;
+
+  ExportTransactionToExcelEvent({required this.type});
+  @override
+  List<Object?> get props => [type];
+}

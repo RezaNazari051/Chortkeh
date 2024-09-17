@@ -23,7 +23,6 @@ class HomeRepository {
         final CategoryModel category =
         getCategoryById(transaction.categoryId, transaction.type);
 
-        final String title = category.name;
 
         double amount = transaction.amount;
 
@@ -54,7 +53,7 @@ class HomeRepository {
 
       return DataSuccess(PieChartDataModel(chartData: sectionData, touchedSection: touchedSection));
     }catch(e){
-      return DataFailed('Failed to get recent activities chart data');
+      return const DataFailed('Failed to get recent activities chart data');
     }
   }
 }

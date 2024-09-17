@@ -3,6 +3,8 @@ import 'package:chortkeh/features/home/presentation/bloc/manage_cards_bloc/card_
 import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/delete_transaction_status.dart';
 import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/get_transaction_status.dart';
 import 'package:chortkeh/features/home/presentation/bloc/recent_transactions_bloc/recent_transactions_bloc.dart';
+import 'package:chortkeh/features/reports/presentation/bloc/reports_bloc.dart';
+import 'package:chortkeh/features/reports/presentation/screens/report_screen.dart';
 import 'package:chortkeh/features/transaction/data/models/transaction_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -138,7 +140,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 const FeaturesCardsList(),
                 const SliverGap(24),
           
-                ///Recent activities in month Widget
                 SliverToBoxAdapter(
                   child: Row(
                     children: [
@@ -190,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
           
                 const SliverGap(10),
-          
+
                 RecentActivitiesChartWidget(constraints: constraints),
 
                 const SliverGap(12),
@@ -237,11 +238,9 @@ class _HomeScreenState extends State<HomeScreen> {
 class ManageChannelsBottomSheet extends StatelessWidget {
   const ManageChannelsBottomSheet({
     super.key,
-    // required this.cardHelper,
     required this.textTheme,
   });
 
-  // final CardHelper cardHelper;
   final TextTheme textTheme;
 
   @override
@@ -312,12 +311,6 @@ String formatJalali(DateTime dateTime,
   }
 
   return '';
-
-  // if(showTime){
-  // return '${date.wN}، ${date.d}${date.mN}، ${date.y}، ${jalali.hour}:${jalali.minute}';
-
-  // }
-  // return '${date.wN}، ${date.d}${date.mN}، ${date.y}';
 }
 
 String formatTime(DateTime time) {

@@ -27,6 +27,17 @@ class _RecentActivitiesChartWidgetState
     });
     super.initState();
   }
+  // @override
+  // void didChangeDependencies() {
+  //   context.read<RecentTransactionsBloc>().add(GetMonthlyChartDataEvent());
+  //   super.didChangeDependencies();
+  // }
+  // @override
+  // void didUpdateWidget(covariant RecentActivitiesChartWidget oldWidget) {
+  //   context.read<RecentTransactionsBloc>().add(GetMonthlyChartDataEvent());
+  //   print('didUpdateWidget');
+  //   super.didUpdateWidget(oldWidget);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +57,18 @@ class _RecentActivitiesChartWidgetState
         child: BlocBuilder<RecentTransactionsBloc, RecentTransactionsState>(
           buildWhen: (previous, current) =>
               previous.getMonthlyActivitiesChartStatus !=
-              current.getMonthlyActivitiesChartStatus,
+              current.getMonthlyActivitiesChartStatus ||
+          previous.getTransactionStatus != current.getTransactionStatus,
+
           builder: (context, state) {
             if (state.getMonthlyActivitiesChartStatus
                 is GetMonthlyChartCompleted) {
               final sections = state.getMonthlyActivitiesChartStatus
                   as GetMonthlyChartCompleted;
+
+              if(sections.data.chartData.isEmpty){
+                return const SizedBox.shrink();
+              }
 
               final chartData = sections.data.chartData;
               final touchedSection = sections.data.touchedSection;
@@ -94,36 +111,34 @@ class _RecentActivitiesChartWidgetState
                   SizedBox(
                     width: 150,
                     height: 200,
-                    child: BlocBuilder<ChartSectionCubit, int>(
-                      builder: (context, state) {
-                        return PieChart(
-                          PieChartData(
-                              centerSpaceRadius:
-                                  widget.constraints.maxWidth * 0.1,
-                              sections: sections.data.chartData,
-                              // sections: showingSection(context, state, colorList),
-                              pieTouchData: PieTouchData(touchCallback:
-                                  (FlTouchEvent event,
-                                      PieTouchResponse? response) {
-                                if (response != null &&
-                                    response.touchedSection != null) {
-                                  context.read<RecentTransactionsBloc>().add(
-                                      GetMonthlyChartDataEvent(
-                                          touchedSection: response
-                                              .touchedSection!
-                                              .touchedSectionIndex));
-                                }
-                              }),
-                              sectionsSpace: 5),
-                        );
-                      },
-                    ),
+                    child: PieChart(
+                      PieChartData(
+                          centerSpaceRadius:
+                              Responsive.isMobile()?
+                          widget.constraints.maxWidth * 0.08:
+                          widget.constraints.maxWidth * 0.05 ,
+                          sections: sections.data.chartData,
+                          // sections: showingSection(context, state, colorList),
+                          pieTouchData: PieTouchData(touchCallback:
+                              (FlTouchEvent event,
+                              PieTouchResponse? response) {
+                            if (response != null &&
+                                response.touchedSection != null) {
+                              context.read<RecentTransactionsBloc>().add(
+                                  GetMonthlyChartDataEvent(
+                                      touchedSection: response
+                                          .touchedSection!
+                                          .touchedSectionIndex));
+                            }
+                          }),
+                          sectionsSpace: 5),
+                    )
                   )
                 ],
               );
             }
 
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           },
         ),
       ),
@@ -206,33 +221,30 @@ class Indicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onHover: onHover,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              width: size,
-              height: size,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3),
-                shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
-                color: color,
-              ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(3),
+              shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
+              color: color,
             ),
-            const SizedBox(
-              width: 4,
-            ),
-            Text(text,
-                style: Theme.of(context)
-                    .textTheme
-                    .displaySmall!
-                    .apply(color: textColor))
-          ],
-        ),
+          ),
+          const SizedBox(
+            width: 4,
+          ),
+          Text(text,
+              style: Theme.of(context)
+                  .textTheme
+                  .displaySmall!
+                  .apply(color: textColor))
+        ],
       ),
     );
   }

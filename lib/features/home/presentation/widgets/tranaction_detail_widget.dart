@@ -97,8 +97,8 @@ class TransactionDetailWidget extends StatelessWidget {
   }
 }
 
-class TranactionDetailBottomSheet extends StatelessWidget {
-  const TranactionDetailBottomSheet({
+class TransactionDetailBottomSheet extends StatelessWidget {
+  const TransactionDetailBottomSheet({
     super.key,
     required this.transactionDetail, required this.type, required this.bloc,
   });
@@ -155,15 +155,15 @@ class TranactionDetailBottomSheet extends StatelessWidget {
               ],
             ),
             const Gap(16),
-            TranactionDetailBottomSheetRowData(
+            TransactionDetailBottomSheetRowData(
                 title:isWithdraw? 'دسته‌بندی پرداخت':'دسته‌بندی واریز', detail: transactionDetail.category.name),
-            TranactionDetailBottomSheetRowData(
+            TransactionDetailBottomSheetRowData(
                 title:type==TransactionType.withdraw? 'مبلغ پرداخت':'مبلغ واریزی',
                 detail:
                     '${transactionDetail.transaction.amount.toStringAsFixed(0).toCurrencyFormat()} تومان'),
-            TranactionDetailBottomSheetRowData(
+            TransactionDetailBottomSheetRowData(
                 title:isWithdraw? 'برداشت از':'واریز به', detail: transactionDetail.card.cardName),
-            TranactionDetailBottomSheetRowData(
+            TransactionDetailBottomSheetRowData(
               title: 'تاریخ و ساعت',
               detail: formatJalali(transactionDetail.transaction.dateTime),
               marginBottom: 16,
@@ -184,8 +184,8 @@ class TranactionDetailBottomSheet extends StatelessWidget {
   }
 }
 
-class TranactionDetailBottomSheetRowData extends StatelessWidget {
-  const TranactionDetailBottomSheetRowData({
+class TransactionDetailBottomSheetRowData extends StatelessWidget {
+  const TransactionDetailBottomSheetRowData({
     super.key,
     required this.title,
     required this.detail,
@@ -221,7 +221,7 @@ Future<void> showTransactionDetailBottomSheet(
   return showModalBottomSheet(
     context: context,
     builder: (context) {
-      return TranactionDetailBottomSheet(transactionDetail:detail,type: type,bloc: context.read<RecentTransactionsBloc>(),);
+      return TransactionDetailBottomSheet(transactionDetail:detail,type: type,bloc: context.read<RecentTransactionsBloc>(),);
     },
   );
 }

@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../core/widgets/tab_bar_widget.dart';
+import '../../data/models/transaction_chart_data_model.dart';
 
 enum ReportChartType {
   weekly,
@@ -51,6 +52,18 @@ class _ReportScreenState extends State<ReportScreen> {
                   EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.05),
               child: Column(
                 children: [
+                  TextButton(onPressed: (){
+                    context.read<ReportsBloc>().add(ExportTransactionToExcelEvent(type:ReportChartType.weekly ));
+                  }, child: const Text('Weekly')),
+
+                  TextButton(onPressed: (){
+                    context.read<ReportsBloc>().add(ExportTransactionToExcelEvent(type:ReportChartType.monthly ));
+                  }, child: const Text('Monthly')),
+
+
+                  TextButton(onPressed: (){
+                    context.read<ReportsBloc>().add(ExportTransactionToExcelEvent(type:ReportChartType.yearly ));
+                  }, child: const Text('Yearly')),
                   BlocBuilder<ChangeTabbarIndexCubit, int>(
                     builder: (context, state) {
                       return ChrotkehTabBarWidget(
@@ -214,7 +227,7 @@ class _BarChatWidgetState extends State<BarChatWidget> {
     }
     if(state.transactionsReportsStatus is GetReportsSuccess){
       final completedState=state.transactionsReportsStatus as GetReportsSuccess;
-      final List<TransactionChartData> chartData=completedState.chartData;
+      final List<TransactionChartDataModel> chartData=completedState.chartData;
 
       double maxValue = chartData
           .map((e) => e.totalDeposits > e.totalWithdrawals ? e.totalDeposits : e.totalWithdrawals)

@@ -72,8 +72,7 @@ class TransactionDataHelper {
     return transactions.any((element) => element.id == id);
   }
 
-  Future<List<TransactionDetail>> getTransactionDetails(
-      TransactionType type) async {
+  Future<List<TransactionDetail>> getAllTransactionsDetails(TransactionType type) async {
     final List<TransactionModel> transactions = getTransactions(type: type);
     final List<TransactionDetail> transactionDetails = [];
 
@@ -88,6 +87,34 @@ class TransactionDataHelper {
           card: card, transaction: transaction, category: category));
     }
     return transactionDetails;
+  }
+
+  Future<TransactionModel?>getTransactionWithId(String transactionId) async {
+    if (await _checkTransactionIsExist(transactionId)) {
+      return  _box.get(transactionId);
+    } else {
+      throw 'چنین تراکنشی وجود ندارد';
+    }
+  }
+
+  Future<TransactionDetail?> getTransactionDetail(String transactionId) async {
+    if (await _checkTransactionIsExist(transactionId)) {
+      final TransactionModel? transaction = await getTransactionWithId(transactionId);
+
+      if(transaction!= null) {
+        final CardsDataHelper cardsDataHelper = locator<CardsDataHelper>();
+        final CardModel card = await cardsDataHelper.getCardWithId(transaction!.cardId);
+
+        final CategoryModel category =
+        getCategoryById(transaction.categoryId, transaction.type);
+        return TransactionDetail(card: card, transaction: transaction, category: category);
+
+      }
+    return null;
+
+    } else {
+      throw '��نین تراکنشی وجود ندارد';
+    }
   }
 
   Future<void> deleteTransaction(TransactionDetail detail) async {

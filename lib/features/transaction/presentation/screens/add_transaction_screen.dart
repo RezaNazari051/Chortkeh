@@ -141,11 +141,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                 state.dateStatus?.date != null &&
                                 state.timeStatus?.time != null &&
                                 _amountController.text.isNotEmpty) {
-                              //* Selected date
                               final DateTime date = state.dateStatus!.date!;
-                              //* Selected time
                               final DateTime time = state.timeStatus!.time!;
-                              //* Merge selected date & selected time
                               final DateTime dateTime = DateTime(date.year,
                                   date.month, date.day, time.hour, time.minute);
                               final TransactionModel transactionModel =
